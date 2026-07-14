@@ -214,7 +214,7 @@
 
           <!-- Handy: beide PDFs direkt an die Mail-App übergeben (Anhänge automatisch dabei) -->
           <div id="shareBox" class="hidden">
-            <div class="info-box"><h4>Am schnellsten am Handy</h4><p>Beide PDFs werden direkt an deine Mail-App übergeben – die Anhänge sind automatisch dabei. Du wählst nur noch deine Mail-App, prüfst den Empfänger und sendest.</p></div>
+            <div class="info-box"><h4>Am schnellsten am Handy</h4><p>Beide PDFs werden direkt an deine Mail-App übergeben – die Anhänge sind automatisch dabei. Du wählst deine Mail-App, trägst oben noch <strong>Empfänger und Betreff</strong> ein und sendest.</p></div>
             <button class="btn btn-primary" style="width:100%" onclick="shareWithAttachments()">Per E-Mail teilen (mit Anhängen)</button>
             <p class="webmail-hint" style="text-align:center">oder klassisch per E-Mail-Programm / Webmail:</p>
           </div>
@@ -497,7 +497,7 @@ function maybeShowShare(){
 async function shareWithAttachments(){
   const m=buildMail(true); // Anhänge sind dabei -> freundlicher Anlagen-Text
   try{
-    await navigator.share({files:pdfFiles(), title:m.subject, text:(m.to?`An: ${m.to}\n\n`:'')+m.body});
+    await navigator.share({files:pdfFiles(), title:m.subject, text:m.body});
     track('submitted',{agentur:formData.agentur||null, has_email:!!m.to, via:'share'});
   }catch(e){/* Nutzer hat abgebrochen o. Ä. -> nichts tun */}
 }
