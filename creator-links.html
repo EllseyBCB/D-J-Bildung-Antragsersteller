@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Creator-Links erstellen | D+J Bildung (intern)</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .tool-wrap{max-width:820px;margin:0 auto;padding:40px 22px 80px}
+  .tool-card{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:34px;margin-bottom:22px}
+  @media(max-width:560px){.tool-card{padding:22px}}
+  .gen-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .gen-row .form-group{flex:1;min-width:220px;margin-bottom:0}
+  .result{margin-top:22px;display:none}
+  .result.show{display:block}
+  .link-field{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .link-field input{flex:1;min-width:240px}
+  .ref-note{font-size:.9rem;color:var(--gray);margin-top:10px}
+  .ref-note b{color:var(--dark)}
+  table.links{width:100%;border-collapse:collapse;margin-top:12px}
+  table.links th,table.links td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--gray-light);font-size:.94rem;vertical-align:middle}
+  table.links th{color:var(--gray);font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+  table.links td.linkcell{word-break:break-all;color:var(--gold-dark);font-weight:600}
+  .btn-mini{padding:8px 14px;border:2px solid var(--gray-light);background:#fff;border-radius:9px;font-weight:700;font-size:.85rem;font-family:inherit;color:var(--dark);cursor:pointer;transition:.2s;white-space:nowrap}
+  .btn-mini:hover{border-color:var(--gold);background:var(--cream)}
+  .empty-hint{color:var(--gray);font-size:.92rem;margin-top:12px}
+</style>
+</head>
+<body style="background:var(--cream)">
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="D+J Bildung Logo">
+      <span style="display:block"><b>D+J Bildung</b><span>ZIELE ERREICHEN</span></span>
+    </a>
+    <a class="back-link" href="index.html">&#8592;&nbsp;Zur Landingpage</a>
+  </div>
+</header>
+
+<div class="tool-wrap">
+
+  <div class="tool-card">
+    <p class="eyebrow">Intern · Creator-Tracking</p>
+    <h2 style="font-weight:900;margin:8px 0 8px">Creator-Links erstellen</h2>
+    <p style="color:#555">Gib den Namen eines YouTubers / Influencers ein. Du bekommst einen eigenen Link – jeder Aufruf, jede ausgefüllte Bewerbung und jeder abgeschickte Antrag wird im Google-Sheet diesem Creator zugeordnet.</p>
+
+    <div class="gen-row" style="margin-top:22px">
+      <div class="form-group">
+        <label for="creatorName">Creator-Name / Kanal</label>
+        <input type="text" id="creatorName" placeholder="z. B. Max Mustermann" autocomplete="off">
+      </div>
+      <button class="btn btn-primary" onclick="makeLink()">Link erstellen</button>
+    </div>
+
+    <div class="result" id="result">
+      <label>Fertiger Link – an den Creator weitergeben:</label>
+      <div class="link-field">
+        <input type="text" id="linkOut" readonly onclick="this.select()">
+        <button class="btn btn-primary" onclick="copyLink()">Kopieren</button>
+      </div>
+      <p class="ref-note">Im Sheet erscheint dieser Creator als: <b id="refOut"></b></p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <h3 style="font-weight:800;margin-bottom:4px">Erstellte Links</h3>
+    <p class="empty-hint" id="emptyHint">Noch keine Links erstellt. Oben einen Namen eingeben und „Link erstellen" klicken.</p>
+    <table class="links" id="linksTable" style="display:none">
+      <thead><tr><th>Creator</th><th>Link</th><th></th></tr></thead>
+      <tbody id="linksBody"></tbody>
+    </table>
+  </div>
+
+  <div class="tool-card">
+    <h3 style="font-weight:800;margin-bottom:10px">Wo sehe ich die Ergebnisse?</h3>
+    <p style="color:#555;margin-bottom:8px">Im Google-Sheet <b>„D+J – Arbeit 4.0 Leads"</b>:</p>
+    <ul style="color:#555;margin:0 0 0 20px;line-height:1.9">
+      <li>Blatt <b>„Auswertung"</b>: je Creator eine Zeile mit Klicks → Besucher → Ausgefüllt → Antrag erstellt → <b>Abgeschickt</b> → Bildungsgutscheine.</li>
+      <li>Blatt <b>„Leads"</b>: jeder einzelne Antrag mit dem Creator-Namen in der Spalte „Creator".</li>
+    </ul>
+    <p class="ref-note" style="margin-top:14px">Tipp: Diese Seite ist nur für euch intern – setz sie dir als Lesezeichen. Ein Link funktioniert auch von Hand: einfach <b>?ref=name</b> an die Landingpage-Adresse anhängen.</p>
+  </div>
+
+</div>
+
+<script>
+// Basis-URL = Ordner dieser Seite -> zeigt immer auf die aktuelle Landingpage
+// (funktioniert auf GitHub Pages und später auf einer eigenen Domain)
+const BASE = new URL('.', location.href).href;
+
+function slugify(s){
+  return (s||'').toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'')
+    .replace(/-{2,}/g,'-');
+}
+
+function buildUrl(slug){ return BASE + '?ref=' + slug; }
+
+function makeLink(){
+  const name = document.getElementById('creatorName').value.trim();
+  const slug = slugify(name);
+  if(!slug){ alert('Bitte einen Creator-Namen eingeben (mindestens ein Buchstabe oder eine Zahl).'); return; }
+  const url = buildUrl(slug);
+  document.getElementById('linkOut').value = url;
+  document.getElementById('refOut').textContent = slug;
+  document.getElementById('result').classList.add('show');
+  addToList(name || slug, slug, url);
+  document.getElementById('creatorName').value='';
+  document.getElementById('creatorName').focus();
+}
+
+function addToList(name, slug, url){
+  const body = document.getElementById('linksBody');
+  // Doppelte (gleicher slug) nicht erneut hinzufügen
+  if([...body.querySelectorAll('tr')].some(tr=>tr.dataset.slug===slug)) return;
+  const tr = document.createElement('tr');
+  tr.dataset.slug = slug;
+  tr.innerHTML = '<td><b>'+escapeHtml(name)+'</b><br><span style="color:#999;font-size:.85rem">'+slug+'</span></td>'
+               + '<td class="linkcell">'+escapeHtml(url)+'</td>'
+               + '<td><button class="btn-mini">Kopieren</button></td>';
+  tr.querySelector('button').addEventListener('click', ()=>copyText(url, tr.querySelector('button')));
+  body.appendChild(tr);
+  document.getElementById('emptyHint').style.display='none';
+  document.getElementById('linksTable').style.display='';
+}
+
+function copyLink(){ copyText(document.getElementById('linkOut').value, event && event.target); }
+
+function copyText(text, btn){
+  const done=()=>{ if(btn){ const t=btn.textContent; btn.textContent='Kopiert ✓'; setTimeout(()=>btn.textContent=t,1500); } };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy_(text,done));
+  } else { fallbackCopy_(text,done); }
+}
+function fallbackCopy_(text,cb){
+  const ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); if(cb) cb();
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// Enter-Taste im Eingabefeld = Link erstellen
+document.getElementById('creatorName').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); makeLink(); } });
+</script>
+</body>
+</html>

@@ -66,7 +66,15 @@ Jeder YouTuber/Influencer bekommt einen eigenen Link mit `?ref=NAME`, z. B.:
 https://ellseybcb.github.io/D-J-Bildung-Antragsersteller/?ref=maxmustermann
 ```
 
-Die Auswertung je Creator (Klicks → Besucher → Ausgefüllt → Antrag erstellt → Abgeschickt → Bildungsgutscheine) entsteht automatisch im Sheet-Blatt „Auswertung“.
+Die Auswertung je Creator (Klicks → Besucher → Ausgefüllt → Antrag erstellt → Abgeschickt → Bildungsgutscheine) entsteht automatisch im Sheet-Blatt „Auswertung“; zusätzlich steht der Creator bei jedem Lead im Blatt „Leads“.
+
+**Bequemer Generator (intern):** `creator-links.html` — Creator-Name eintippen → fertiger Link mit „Kopieren“-Knopf. Erreichbar unter:
+
+```
+https://ellseybcb.github.io/D-J-Bildung-Antragsersteller/creator-links.html
+```
+
+Die Seite ist `noindex` (nicht öffentlich verlinkt) und baut die Links automatisch aus der aktuellen Adresse — funktioniert also auch nach einem Umzug auf eine eigene Domain.
 
 ## Kontakt
 
