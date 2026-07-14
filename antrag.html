@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antrag erstellen – Arbeit 4.0 | D+J Bildung</title>
+<meta name="description" content="Erstelle in 5 Minuten deinen Antrag auf einen Bildungsgutschein für die AZAV-zertifizierte Weiterbildung Arbeit 4.0 – Schritt für Schritt.">
+<script src="assets/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html" data-keep-query>
+      <img src="assets/logo.png" alt="D+J Bildung Logo">
+      <span style="display:block"><b>D+J Bildung</b><span>ZIELE ERREICHEN</span></span>
+    </a>
+    <a class="back-link" href="index.html" data-keep-query>&#8592;&nbsp;Zurück zur Übersicht</a>
+  </div>
+</header>
+
+<!-- ============ ANTRAG: SCHRITT FÜR SCHRITT ============ -->
+<section id="antrag">
+  <div class="wrap form-shell">
+    <div class="form-intro">
+      <p class="eyebrow">Dein Antrag</p>
+      <h2>Antrag auf Bildungsgutschein</h2>
+      <p>Deine Angaben werden für den formellen Antrag nach §81 SGB III benötigt. Am Ende erhältst du zwei fertige PDFs zum Einreichen.</p>
+    </div>
+
+    <div class="progress-container">
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+        <div class="step-dot" data-step="4"></div>
+        <div class="step-dot" data-step="5"></div>
+      </div>
+      <div class="progress-text">
+        <span id="stepLabel">Schritt 1 von 5: Persönliche Daten</span>
+        <span id="progressPercent">20%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="card step-card" id="step1">
+      <div class="card-title"><span class="step-number">1</span>Deine persönlichen Daten</div>
+      <div class="info-box"><h4>Kurzer Hinweis</h4><p>Alle Felder mit <span style="color:#e74c3c">*</span> sind Pflichtfelder. Die Daten erscheinen ausschließlich in deinem eigenen Antrags-PDF.</p></div>
+      <div class="form-row">
+        <div class="form-group"><label>Anrede <span class="required">*</span></label>
+          <select id="anrede" required><option value="">Bitte wählen…</option><option>Herr</option><option>Frau</option><option>Divers</option></select></div>
+        <div class="form-group"><label>Titel</label>
+          <select id="titel"><option value="">Kein Titel</option><option>Dr.</option><option>Prof.</option><option>Prof. Dr.</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Vorname <span class="required">*</span></label><input type="text" id="vorname" placeholder="Dein Vorname" required></div>
+        <div class="form-group"><label>Nachname <span class="required">*</span></label><input type="text" id="nachname" placeholder="Dein Nachname" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Geburtsdatum <span class="required">*</span></label><input type="date" id="geburtsdatum" required></div>
+        <div class="form-group"><label>Kundennummer (falls vorhanden)</label><input type="text" id="kundennummer" placeholder="bei der Agentur / Jobcenter"></div>
+      </div>
+      <div class="form-group"><label>Straße und Hausnummer <span class="required">*</span></label><input type="text" id="strasse" placeholder="Musterstraße 123" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>PLZ <span class="required">*</span></label><input type="text" id="plz" placeholder="12345" maxlength="5" required></div>
+        <div class="form-group"><label>Ort <span class="required">*</span></label><input type="text" id="ort" placeholder="Musterstadt" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>E-Mail <span class="required">*</span></label><input type="email" id="email" placeholder="deine@email.de" required></div>
+        <div class="form-group"><label>Telefon <span class="required">*</span></label><input type="tel" id="telefon" placeholder="+49 …" required></div>
+      </div>
+      <div class="btn-group"><div></div><button class="btn btn-primary" onclick="nextStep(2)">Weiter</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card step-card hidden" id="step2">
+      <div class="card-title"><span class="step-number">2</span>Dein Beschäftigungsstatus</div>
+      <div class="info-box"><h4>Fördervoraussetzung nach §81 SGB III</h4><p>Gefördert wird, wer arbeitssuchend, arbeitslos oder von Arbeitslosigkeit bedroht ist.</p></div>
+      <div class="form-group"><label>Aktueller Status <span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="status" value="arbeitslos">Arbeitslos gemeldet</label>
+          <label class="radio-option"><input type="radio" name="status" value="arbeitssuchend">Arbeitssuchend gemeldet</label>
+          <label class="radio-option"><input type="radio" name="status" value="von_arbeitslosigkeit_bedroht">Von Arbeitslosigkeit bedroht</label>
+          <label class="radio-option"><input type="radio" name="status" value="in_kuendigung">In Kündigung / Vertrag läuft aus</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Seit wann in diesem Status? <span class="required">*</span></label><input type="date" id="statusSeit" required></div>
+      <div class="form-group"><label>Zuständige Agentur für Arbeit / Jobcenter <span class="required">*</span></label><input type="text" id="agentur" placeholder="z. B. Agentur für Arbeit München" required></div>
+      <div class="form-group"><label>Name deiner Vermittlungsfachkraft (falls bekannt)</label><input type="text" id="vermittler" placeholder="Vor- und Nachname"></div>
+      <div class="form-group"><label>Beziehst du aktuell Leistungen?</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="leistungen" value="alg1">ALG I</label>
+          <label class="radio-option"><input type="radio" name="leistungen" value="alg2">Bürgergeld</label>
+          <label class="radio-option"><input type="radio" name="leistungen" value="keine">Keine</label>
+        </div>
+      </div>
+      <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep(1)">Zurück</button><button class="btn btn-primary" onclick="nextStep(3)">Weiter</button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card step-card hidden" id="step3">
+      <div class="card-title"><span class="step-number">3</span>Dein beruflicher Hintergrund</div>
+      <div class="form-row">
+        <div class="form-group"><label>Höchster Bildungsabschluss <span class="required">*</span></label>
+          <select id="bildungsabschluss" required><option value="">Bitte wählen…</option>
+            <option value="hauptschule">Hauptschulabschluss</option><option value="realschule">Realschulabschluss</option>
+            <option value="abitur">Abitur</option><option value="ausbildung">Berufsausbildung</option>
+            <option value="meister">Meister/Techniker</option><option value="bachelor">Bachelor</option>
+            <option value="master">Master/Diplom</option><option value="promotion">Promotion</option></select></div>
+        <div class="form-group"><label>Erlernter Beruf</label><input type="text" id="erlernterBeruf" placeholder="z. B. Kauffrau/-mann"></div>
+      </div>
+      <div class="form-group"><label>Zuletzt ausgeübte Tätigkeit</label><input type="text" id="letzteTaetigkeit" placeholder="z. B. Sachbearbeitung"></div>
+      <div class="form-group"><label>Branche der letzten Beschäftigung <span class="required">*</span></label>
+        <select id="branche" required><option value="">Bitte wählen…</option>
+          <option value="industrie">Industrie / Produktion</option><option value="handel">Handel / Einzelhandel</option>
+          <option value="dienstleistung">Dienstleistungen</option><option value="it">IT / Technologie</option>
+          <option value="finanzen">Banken / Finanzen / Versicherungen</option><option value="gesundheit">Gesundheit / Pflege</option>
+          <option value="bildung">Bildung / Erziehung</option><option value="handwerk">Handwerk</option>
+          <option value="verwaltung">Öffentliche Verwaltung</option><option value="gastro">Gastronomie / Hotellerie</option>
+          <option value="logistik">Logistik / Transport</option><option value="medien">Medien / Marketing</option>
+          <option value="sonstiges">Sonstige</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label>Berufserfahrung insgesamt (Jahre) <span class="required">*</span></label><input type="number" id="berufserfahrung" min="0" max="50" placeholder="z. B. 15" required></div>
+        <div class="form-group"><label>Davon in letzter Position (Jahre)</label><input type="number" id="letztePosition" min="0" max="50" placeholder="z. B. 5"></div>
+      </div>
+      <div class="form-group"><label>Grund für die aktuelle Arbeitssuche <span class="required">*</span></label>
+        <select id="grundArbeitssuche" required><option value="">Bitte wählen…</option>
+          <option value="kuendigung_ag">Kündigung durch Arbeitgeber</option><option value="kuendigung_an">Eigene Kündigung</option>
+          <option value="befristet">Befristeter Vertrag ausgelaufen</option><option value="insolvenz">Insolvenz des Arbeitgebers</option>
+          <option value="restrukturierung">Restrukturierung / Stellenabbau</option><option value="gesundheit">Gesundheitliche Gründe</option>
+          <option value="berufsrueckkehr">Berufsrückkehr (z. B. nach Elternzeit)</option><option value="umzug">Umzug / regionale Veränderung</option>
+          <option value="neuorientierung">Berufliche Neuorientierung</option><option value="digitalisierung">Wegfall durch Digitalisierung</option></select></div>
+      <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep(2)">Zurück</button><button class="btn btn-primary" onclick="nextStep(4)">Weiter</button></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="card step-card hidden" id="step4">
+      <div class="card-title"><span class="step-number">4</span>Berufsziel & Weiterbildung</div>
+      <div class="info-box"><h4>Deine Zukunftsperspektive</h4><p>„Arbeit 4.0" vermittelt Kompetenzen in Digitalisierung, KI, Marketing, Cybersecurity und allen relevanten Themen der modernen Arbeitswelt.</p></div>
+      <div class="info-box"><h4>Durchführung</h4><p>Die Weiterbildung findet in <strong>Vollzeit über 6 Monate</strong> statt – 1.200 Unterrichtseinheiten mit Live-Unterricht und betreuten Selbstlernphasen, komplett online.</p></div>
+      <div class="form-group"><label>In welchem Berufsfeld möchtest du künftig tätig sein? <span class="required">*</span></label><input type="text" id="zielberuf" placeholder="z. B. Projektmanager/in, Marketing-Spezialist/in" required oninput="updateMotivation()"></div>
+      <div class="form-group"><label>Wie schätzt du deine digitalen Kompetenzen ein? <span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="digitalKompetenz" value="gering">Grundkenntnisse</label>
+          <label class="radio-option"><input type="radio" name="digitalKompetenz" value="mittel">Durchschnittlich</label>
+          <label class="radio-option"><input type="radio" name="digitalKompetenz" value="gut">Gut</label>
+          <label class="radio-option"><input type="radio" name="digitalKompetenz" value="ausbaufaehig">Ausbaufähig</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Automatisch erzeugte Begründung für deinen Antrag:</label><div class="generated-text" id="generatedMotivation">Bitte gib zunächst dein Berufsziel ein…</div></div>
+      <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep(3)">Zurück</button><button class="btn btn-primary" onclick="nextStep(5)">Weiter</button></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="card step-card hidden" id="step5">
+      <div class="card-title"><span class="step-number">5</span>Bewerbungen & Abschluss</div>
+      <div class="info-box"><h4>Deine bisherigen Bemühungen</h4><p>Die Agentur prüft, ob die Weiterbildung nötig ist, um deine Vermittlungschancen zu verbessern.</p></div>
+      <div class="form-row">
+        <div class="form-group"><label>Anzahl Bewerbungen <span class="required">*</span></label>
+          <select id="bewerbungenAnzahl" required><option value="">Bitte wählen…</option>
+            <option>5</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>40</option><option>50</option><option>75</option><option>100</option><option value="mehr100">Mehr als 100</option></select></div>
+        <div class="form-group"><label>In den letzten … Monaten <span class="required">*</span></label>
+          <select id="bewerbungenMonate" required><option value="">Bitte wählen…</option>
+            <option>3</option><option>4</option><option>5</option><option>6</option><option>9</option><option>12</option><option>18</option><option>24</option></select></div>
+      </div>
+      <div class="form-group"><label>Vorstellungsgespräche?</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="vorstellungen" value="keine">Keine</label>
+          <label class="radio-option"><input type="radio" name="vorstellungen" value="wenige">1–3</label>
+          <label class="radio-option"><input type="radio" name="vorstellungen" value="mehrere">Mehr als 3</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Häufigste Ablehnungsgründe (Mehrfachauswahl)</label>
+        <div class="checkbox-group">
+          <label class="checkbox-option"><input type="checkbox" name="ablehnung" value="qualifikation">Fehlende Qualifikationen</label>
+          <label class="checkbox-option"><input type="checkbox" name="ablehnung" value="digital">Mangelnde digitale Kompetenzen</label>
+          <label class="checkbox-option"><input type="checkbox" name="ablehnung" value="erfahrung">Fehlende Erfahrung</label>
+          <label class="checkbox-option"><input type="checkbox" name="ablehnung" value="andere">Andere Kandidaten bevorzugt</label>
+          <label class="checkbox-option"><input type="checkbox" name="ablehnung" value="keine_rueckmeldung">Keine Rückmeldung</label>
+        </div>
+      </div>
+      <hr style="border:none;border-top:2px solid var(--gold);margin:28px 0">
+      <div class="info-box success"><h4>Fast geschafft</h4><p>Prüfe deine Angaben und erstelle deinen individuellen Antrag.</p></div>
+      <div id="summaryContent"></div>
+      <div class="legal-box">
+        <h5>Rechtliche Hinweise & Datenschutz</h5>
+        <p><strong>Rechtsgrundlage:</strong> Der Antrag erfolgt gemäß §81 SGB III. Eine Förderung ist möglich, wenn die Weiterbildung für deine berufliche Eingliederung notwendig ist.</p>
+        <p><strong>AZAV:</strong> Die Weiterbildung „Arbeit 4.0" und der Bildungsträger D+J Bildung sind nach AZAV zertifiziert.</p>
+        <p><strong>Datenverarbeitung:</strong> Deine Angaben werden zur Erstellung deines Antrags verarbeitet. Mit deiner Einwilligung darf D+J Bildung dich zu deiner Weiterbildung und Förderung kontaktieren (Art. 6 Abs. 1 lit. a DSGVO). Du kannst die Einwilligung jederzeit per E-Mail an dn@dj-bildung.de widerrufen.</p>
+      </div>
+      <div class="form-group"><label class="checkbox-option" style="width:100%"><input type="checkbox" id="datenschutz" required><span>Ich habe die <a href="https://www.dj-bildung.com/datenschutz/" target="_blank" rel="noopener" style="color:var(--gold-dark);font-weight:700">Datenschutzhinweise</a> gelesen und stimme zu. <span class="required">*</span></span></label></div>
+      <div class="form-group"><label class="checkbox-option" style="width:100%"><input type="checkbox" id="kontaktErlaubt"><span>D+J Bildung darf mich zu meiner Weiterbildung und Förderung kontaktieren.</span></label></div>
+      <div class="form-group"><label class="checkbox-option" style="width:100%"><input type="checkbox" id="richtigkeit" required><span>Ich bestätige, dass alle Angaben wahrheitsgemäß sind. <span class="required">*</span></span></label></div>
+      <div class="btn-group"><button class="btn btn-secondary" onclick="prevStep(4)">Zurück</button><button class="btn btn-primary" onclick="finish()">Antrag erstellen &amp; PDFs herunterladen</button></div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="card step-card hidden" id="stepSuccess">
+      <div class="success-animation">
+        <div class="success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+        <h2 style="font-weight:900;margin-bottom:10px">Dein Antrag ist fertig!</h2>
+        <p style="color:var(--gray);max-width:46ch;margin:0 auto">Lade beide Dokumente herunter und reiche sie bei deiner Agentur für Arbeit ein.</p>
+        <div class="download-buttons">
+          <button class="download-btn" onclick="downloadAntrag()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Antrag auf Bildungsgutschein (PDF)</button>
+          <button class="download-btn outline" onclick="downloadInfoseite()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Info-Anlage „Arbeit 4.0" (PDF)</button>
+        </div>
+        <div class="send-box">
+          <h3>Jetzt an deine Agentur senden</h3>
+          <p style="color:#555;margin-bottom:6px">Trage die E-Mail-Adresse deiner Agentur / deines Jobcenters ein – wir bereiten die Nachricht für dich vor.</p>
+          <div class="form-group" style="margin:12px 0"><input type="email" id="agenturEmail" placeholder="z. B. muenchen@arbeitsagentur.de"></div>
+          <ol>
+            <li>Beide PDFs oben herunterladen (passiert automatisch).</li>
+            <li>E-Mail öffnen – über dein Mailprogramm oder direkt über Webmail. Empfänger und Text sind schon ausgefüllt.</li>
+            <li>Die zwei PDFs anhängen und absenden.</li>
+          </ol>
+          <button class="btn btn-primary" style="width:100%" onclick="sendToAgentur()">E-Mail-Programm öffnen</button>
+          <p class="webmail-hint">Du nutzt Webmail? Direkt öffnen:</p>
+          <div class="provider-row">
+            <button class="prov" onclick="openWebmail('gmail')">Gmail</button>
+            <button class="prov" onclick="openWebmail('outlook')">Outlook.com</button>
+            <button class="prov" onclick="openWebmail('gmx')">GMX</button>
+            <button class="prov" onclick="openWebmail('web')">WEB.DE</button>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="copyMailText()">E-Mail-Text kopieren</button>
+        </div>
+        <p style="margin-top:22px;color:var(--gray);font-size:.92rem">Fragen? D+J Bildung hilft dir gern weiter: <a href="mailto:dn@dj-bildung.de" style="color:var(--gold-dark);font-weight:700">dn@dj-bildung.de</a> · <a href="tel:+497141461315" style="color:var(--gold-dark);font-weight:700">+49 7141 461315</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div>
+      <b style="font-size:1.15rem">D+J Bildung</b><br>
+      Daniela Nedvidek<br>
+      Tel.: <a href="tel:+497141461315">+49 7141 461315</a><br>
+      <a href="mailto:dn@dj-bildung.de">dn@dj-bildung.de</a><br>
+      <a href="https://www.dj-bildung.com">www.dj-bildung.com</a>
+    </div>
+    <div>
+      <b>Weiterbildung</b><br>
+      Arbeit 4.0 – Zukunft der Arbeit<br>
+      Maßnahme-Nr. 641/70/2025<br>
+      AZAV-zertifiziert
+    </div>
+    <div>
+      <b>Förderung</b><br>
+      100 % über Bildungsgutschein<br>
+      Agentur für Arbeit / Jobcenter<br>
+      nach §81 SGB III
+    </div>
+    <p class="small">© <span id="year"></span> D+J Bildung · Zertifizierter Bildungsträger nach AZAV. Angaben ohne Gewähr. Die Entscheidung über eine Förderung erfolgt nach Prüfung durch die Agentur für Arbeit bzw. das Jobcenter.
+      <span class="legal"><a href="https://www.dj-bildung.com/impressum/">Impressum</a><a href="https://www.dj-bildung.com/datenschutz/">Datenschutz</a></span>
+    </p>
+  </div>
+</footer>
+
+<div class="loading-overlay hidden" id="loadingOverlay"><div class="loading-spinner"></div></div>
+
+<script src="assets/config.js"></script>
+<script>
+/* =========================================================
+   FORMULAR-LOGIK
+   ========================================================= */
+let formData={durchfuehrung:'vollzeit'}, currentStep=1; const totalSteps=5;
+let generatedAntragPDF=null, generatedInfoPDF=null;
+
+let started=false;
+function markStart(){ if(!started){ started=true; track('form_start'); } }
+
+/* Kästchen & Radios: Klick auf das KÄSTCHEN oder den Text funktioniert gleichermaßen.
+   Das Umschalten übernimmt der Browser (native Label-Zuordnung); wir aktualisieren
+   nur die optische Markierung über das change-Event. */
+function refreshRadioGroup(name){
+  document.querySelectorAll(`.radio-option input[name="${name}"]`).forEach(i=>{
+    const opt=i.closest('.radio-option'); if(opt) opt.classList.toggle('selected', i.checked);
+  });
+}
+function initChoiceInputs(){
+  document.querySelectorAll('#antrag .radio-option input[type=radio]').forEach(inp=>{
+    inp.addEventListener('change',()=>{ refreshRadioGroup(inp.name); markStart(); });
+  });
+  document.querySelectorAll('#antrag .checkbox-option input[type=checkbox]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const opt=inp.closest('.checkbox-option'); if(opt) opt.classList.toggle('selected', inp.checked);
+      markStart();
+    });
+  });
+}
+initChoiceInputs();
+document.querySelectorAll('#antrag input,#antrag select,#antrag textarea').forEach(f=>f.addEventListener('input',markStart,{once:true}));
+
+function updateMotivation(){
+  const z=document.getElementById('zielberuf')?.value||'';
+  const m = z.trim()==='' ? 'Bitte gib zunächst dein Berufsziel ein…'
+    : `Die Weiterbildung „Arbeit 4.0" ist für meine angestrebte Tätigkeit als ${z} von entscheidender Bedeutung. Der Kurs vermittelt in 12 aufeinander abgestimmten Modulen ein ganzheitliches Kompetenzprofil für die moderne Arbeitswelt. Erst durch das Zusammenspiel aller Module – von Digitalisierung und Künstlicher Intelligenz über Social Media Marketing und Kommunikation bis hin zu Cybersecurity und Nachhaltigkeit – entfaltet diese Weiterbildung ihren vollen Nutzen. Die Kombination aus technischem Wissen, Führungskompetenzen und Soft Skills macht mich zu einer vielseitig einsetzbaren Fachkraft, die den Anforderungen des digitalen Wandels gewachsen ist. So kann ich meine vorhandene Berufserfahrung optimal mit zukunftsorientierten Kompetenzen ergänzen.`;
+  document.getElementById('generatedMotivation').textContent=m; formData.generatedMotivation=m;
+}
+
+/* --- Seiten-Navigation: jeder Schritt fühlt sich wie eine eigene Seite an --- */
+function showStep(step){
+  document.getElementById(`step${currentStep}`).classList.add('hidden');
+  document.getElementById(`step${step}`).classList.remove('hidden');
+  currentStep=step; updateProgress();
+  if(step===5)generateSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextStep(step){
+  if(!validateStep(currentStep))return;
+  saveStepData(currentStep);
+  history.pushState({step:step},'', '#schritt-'+step);
+  showStep(step);
+}
+function prevStep(step){
+  saveStepData(currentStep);
+  history.pushState({step:step},'', '#schritt-'+step);
+  showStep(step);
+}
+// Browser-Zurück/Vor-Taste blättert durch die Schritte, statt die Seite zu verlassen
+window.addEventListener('popstate', e=>{
+  const step=(e.state && e.state.step) || 1;
+  const successVisible = !document.getElementById('stepSuccess').classList.contains('hidden');
+  if(step>=1 && step<=totalSteps && !successVisible){
+    showStep(step);
+  }
+});
+// Beim (Neu-)Laden immer sauber bei Schritt 1 beginnen
+history.replaceState({step:1},'', location.pathname+location.search+'#schritt-1');
+function updateProgress(){
+  const p=(currentStep/totalSteps)*100;
+  document.getElementById('progressFill').style.width=p+'%';
+  document.getElementById('progressPercent').textContent=Math.round(p)+'%';
+  const labels={1:'Persönliche Daten',2:'Beschäftigungsstatus',3:'Beruflicher Hintergrund',4:'Berufsziel',5:'Bewerbungen & Abschluss'};
+  document.getElementById('stepLabel').textContent=`Schritt ${currentStep} von ${totalSteps}: ${labels[currentStep]}`;
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','completed');if(i+1<currentStep)d.classList.add('completed');else if(i+1===currentStep)d.classList.add('active');});
+}
+function validateStep(step){
+  let ok=true; const el=document.getElementById(`step${step}`);
+  el.querySelectorAll('[required]').forEach(f=>{if(!f.value){f.style.borderColor='#e74c3c';ok=false;}else f.style.borderColor='#e0e0e0';});
+  if(step===2&&!document.querySelector('input[name=status]:checked')){alert('Bitte wähle deinen aktuellen Status aus.');return false;}
+  if(step===4){
+    if(!document.querySelector('input[name=digitalKompetenz]:checked')){alert('Bitte schätze deine digitalen Kompetenzen ein.');return false;}
+  }
+  if(!ok)alert('Bitte fülle alle Pflichtfelder aus.');
+  return ok;
+}
+function saveStepData(step){
+  document.getElementById(`step${step}`).querySelectorAll('input,select,textarea').forEach(f=>{
+    if(f.type==='radio'){if(f.checked)formData[f.name]=f.value;}
+    else if(f.type==='checkbox'){if(f.name){if(!formData[f.name])formData[f.name]=[];if(f.checked&&!formData[f.name].includes(f.value))formData[f.name].push(f.value);}}
+    else if(f.id)formData[f.id]=f.value;
+  });
+  const md=document.getElementById('generatedMotivation'); if(md)formData.generatedMotivation=md.textContent;
+}
+const fmt=d=>d?new Date(d).toLocaleDateString('de-DE'):'-';
+const L={
+  status:{arbeitslos:'Arbeitslos gemeldet',arbeitssuchend:'Arbeitssuchend gemeldet',von_arbeitslosigkeit_bedroht:'Von Arbeitslosigkeit bedroht',in_kuendigung:'In Kündigung / Vertrag läuft aus'},
+  leistungen:{alg1:'ALG I',alg2:'Bürgergeld',keine:'Keine Leistungen'},
+  bildung:{hauptschule:'Hauptschulabschluss',realschule:'Realschulabschluss',abitur:'Abitur',ausbildung:'Berufsausbildung',meister:'Meister/Techniker',bachelor:'Bachelor',master:'Master/Diplom',promotion:'Promotion'},
+  branche:{industrie:'Industrie',handel:'Handel',dienstleistung:'Dienstleistungen',it:'IT/Technologie',finanzen:'Finanzen',gesundheit:'Gesundheit',bildung:'Bildung',handwerk:'Handwerk',verwaltung:'Verwaltung',gastro:'Gastronomie',logistik:'Logistik',medien:'Medien/Marketing',sonstiges:'Sonstige'},
+  grund:{kuendigung_ag:'Kündigung durch Arbeitgeber',kuendigung_an:'Eigene Kündigung',befristet:'Befristeter Vertrag ausgelaufen',insolvenz:'Insolvenz des Arbeitgebers',restrukturierung:'Restrukturierung/Stellenabbau',gesundheit:'Gesundheitliche Gründe',berufsrueckkehr:'Berufsrückkehr',umzug:'Umzug',neuorientierung:'Berufliche Neuorientierung',digitalisierung:'Wegfall durch Digitalisierung'}
+};
+function generateSummary(){
+  const dauer='6 Monate (Vollzeit)';
+  document.getElementById('summaryContent').innerHTML=`
+    <div class="summary-section"><h4>Persönliche Daten</h4>
+      <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value">${[formData.anrede,formData.titel,formData.vorname,formData.nachname].filter(Boolean).join(' ')}</span></div>
+      <div class="summary-row"><span class="summary-label">Adresse</span><span class="summary-value">${formData.strasse||''}, ${formData.plz||''} ${formData.ort||''}</span></div>
+      <div class="summary-row"><span class="summary-label">Kontakt</span><span class="summary-value">${formData.email||''} · ${formData.telefon||''}</span></div></div>
+    <div class="summary-section"><h4>Status & Beruf</h4>
+      <div class="summary-row"><span class="summary-label">Status</span><span class="summary-value">${L.status[formData.status]||'-'}</span></div>
+      <div class="summary-row"><span class="summary-label">Agentur</span><span class="summary-value">${formData.agentur||'-'}</span></div>
+      <div class="summary-row"><span class="summary-label">Branche</span><span class="summary-value">${L.branche[formData.branche]||'-'}</span></div>
+      <div class="summary-row"><span class="summary-label">Berufserfahrung</span><span class="summary-value">${formData.berufserfahrung||'0'} Jahre</span></div></div>
+    <div class="summary-section"><h4>Weiterbildung</h4>
+      <div class="summary-row"><span class="summary-label">Maßnahme</span><span class="summary-value">Arbeit 4.0 (${CONFIG.MASSNAHME_NR})</span></div>
+      <div class="summary-row"><span class="summary-label">Durchführung</span><span class="summary-value">${dauer}</span></div>
+      <div class="summary-row"><span class="summary-label">Zielberuf</span><span class="summary-value">${formData.zielberuf||'-'}</span></div></div>`;
+}
+
+/* =========================================================
+   ABSCHLUSS: validieren -> DB-Eintrag -> PDFs
+   ========================================================= */
+async function finish(){
+  saveStepData(5);
+  if(!document.getElementById('datenschutz').checked){alert('Bitte stimme den Datenschutzhinweisen zu.');return;}
+  if(!document.getElementById('richtigkeit').checked){alert('Bitte bestätige die Richtigkeit deiner Angaben.');return;}
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+
+  await saveLead();          // CRM / Datenbank-Eintrag
+  await track('pdf_generated');
+  generateAntragPDF();       // Antrags-PDF vorbereiten
+  generateInfoPDF();         // Info-Anlage vorbereiten
+  sendCopyToDJ();            // Kopie inkl. beider PDFs an D+J (fire and forget)
+
+  document.getElementById('step5').classList.add('hidden');
+  document.getElementById('stepSuccess').classList.remove('hidden');
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  // Agentur-E-Mail für den Versand-Schritt vorbelegen
+  if(formData.agentur) document.getElementById('agenturEmail').placeholder=`E-Mail deiner ${formData.agentur}`;
+  window.scrollTo({top:0,behavior:'smooth'});
+  // beide PDFs automatisch anbieten
+  downloadAntrag(); setTimeout(downloadInfoseite,600);
+}
+
+async function saveLead(){
+  if(!sheetOn()) return;
+  const payload={
+    creator:CREATOR, visitor_id:VISITOR, status:'neu',
+    anrede:formData.anrede||'', titel:formData.titel||'',
+    vorname:formData.vorname||'', nachname:formData.nachname||'',
+    email:formData.email||'', telefon:formData.telefon||'',
+    strasse:formData.strasse||'', plz:formData.plz||'', ort:formData.ort||'',
+    geburtsdatum:formData.geburtsdatum||'', kundennummer:formData.kundennummer||'',
+    beschaeftigungsstatus:formData.status||'', status_seit:formData.statusSeit||'',
+    agentur:formData.agentur||'', vermittler:formData.vermittler||'', leistungen:formData.leistungen||'',
+    bildungsabschluss:formData.bildungsabschluss||'', branche:formData.branche||'',
+    berufserfahrung:formData.berufserfahrung||'',
+    grund_arbeitssuche:formData.grundArbeitssuche||'',
+    durchfuehrung:formData.durchfuehrung||'', zielberuf:formData.zielberuf||'',
+    digital_kompetenz:formData.digitalKompetenz||'',
+    kontakt_erlaubt:document.getElementById('kontaktErlaubt').checked ? 'ja' : 'nein'
+  };
+  await postToSheet('lead', payload);
+}
+
+function buildMail(){
+  const to=(document.getElementById('agenturEmail').value||'').trim();
+  const name=[formData.vorname,formData.nachname].filter(Boolean).join(' ');
+  const subject=`Antrag auf Bildungsgutschein – ${name} – Maßnahme ${CONFIG.MASSNAHME_NR}`;
+  const body=
+`Sehr geehrte Damen und Herren,
+
+anbei sende ich Ihnen meinen Antrag auf einen Bildungsgutschein für die AZAV-zertifizierte Weiterbildung "Arbeit 4.0 - Zukunft der Arbeit" (Maßnahme-Nr. ${CONFIG.MASSNAHME_NR}, Bildungsträger D+J Bildung).
+
+WICHTIG: Bitte hängen Sie vor dem Senden die zwei heruntergeladenen PDF-Dateien an diese E-Mail an:
+1. Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf
+2. Info-Anlage_Arbeit_4_0.pdf
+
+Für Rückfragen zur Maßnahme steht Ihnen der Bildungsträger zur Verfügung:
+D+J Bildung, Daniela Nedvidek, ${CONFIG.PHONE}, ${CONFIG.DANIELA_EMAIL}, ${CONFIG.HOMEPAGE}
+
+Mit freundlichen Grüßen
+${name}
+${formData.strasse||''}, ${formData.plz||''} ${formData.ort||''}`;
+  return {to, name, subject, body};
+}
+
+// 1) Standard-Mailprogramm (mailto)
+function sendToAgentur(){
+  const m=buildMail();
+  track('submitted',{agentur:formData.agentur||null, has_email:!!m.to, via:'mailto'});
+  window.location.href=`mailto:${m.to}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+}
+
+// 2) Webmail-Anbieter direkt öffnen
+function openWebmail(provider){
+  const m=buildMail();
+  const t=encodeURIComponent(m.to), s=encodeURIComponent(m.subject), b=encodeURIComponent(m.body);
+  track('submitted',{agentur:formData.agentur||null, has_email:!!m.to, via:provider});
+  let url='';
+  if(provider==='gmail')   url=`https://mail.google.com/mail/?view=cm&fs=1&to=${t}&su=${s}&body=${b}`;
+  if(provider==='outlook') url=`https://outlook.live.com/mail/0/deeplink/compose?to=${t}&subject=${s}&body=${b}`;
+  if(provider==='gmx' || provider==='web'){
+    // GMX/WEB.DE unterstützen kein automatisches Ausfüllen -> Text kopieren + Postfach öffnen
+    copyMailText(true);
+    url = provider==='gmx' ? 'https://www.gmx.net/' : 'https://web.de/';
+    toast('E-Mail-Text kopiert! Öffne im Postfach eine neue E-Mail, füge den Text ein und hänge die 2 PDFs an.');
+  }
+  window.open(url,'_blank','noopener');
+}
+
+// 3) E-Mail-Text in die Zwischenablage kopieren (Rückfallebene)
+function copyMailText(silent){
+  const m=buildMail();
+  const full=`An: ${m.to}\nBetreff: ${m.subject}\n\n${m.body}`;
+  const done=()=>{ if(!silent) toast('E-Mail-Text kopiert! Füge ihn in deine E-Mail ein und hänge die 2 PDFs an.'); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(full).then(done).catch(()=>fallbackCopy_(full,done));
+  } else { fallbackCopy_(full,done); }
+}
+function fallbackCopy_(text,cb){
+  const ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta); if(cb) cb();
+}
+
+// kleine Einblend-Meldung
+function toast(msg){
+  let el=document.getElementById('djToast');
+  if(!el){ el=document.createElement('div'); el.id='djToast'; el.className='dj-toast'; document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),5000);
+}
+
+// 4) Automatische Kopie beider PDFs an D+J (über den Sheet-Webhook)
+async function sendCopyToDJ(){
+  if(!sheetOn()) return;
+  try{
+    if(!generatedAntragPDF) generateAntragPDF();
+    if(!generatedInfoPDF)   generateInfoPDF();
+    const a=generatedAntragPDF.output('datauristring').split('base64,')[1];
+    const i=generatedInfoPDF.output('datauristring').split('base64,')[1];
+    const name=[formData.vorname,formData.nachname].filter(Boolean).join(' ');
+    await postToSheet('mailcopy', {
+      notify_to:CONFIG.DANIELA_EMAIL, name, creator:CREATOR,
+      email:formData.email||'', telefon:formData.telefon||'', agentur:formData.agentur||'',
+      files:[
+        {name:`Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf`, base64:a},
+        {name:'Info-Anlage_Arbeit_4_0.pdf', base64:i}
+      ]
+    });
+  }catch(e){/* Seite läuft auch ohne Kopie weiter */}
+}
+
+/* =========================================================
+   PDF 1: ANTRAG
+   ========================================================= */
+function generateAntragPDF(){
+  const {jsPDF}=window.jspdf; const doc=new jsPDF('p','mm','a4');
+  const pageW=210,pageH=297,margin=25,cw=pageW-2*margin;
+  const gold=[201,169,97],dark=[42,42,42],gray=[100,100,100]; let y=25;
+  function addText(t,size=10,bold=false,color=dark,align='left'){
+    doc.setFontSize(size); doc.setFont('helvetica',bold?'bold':'normal'); doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(t,cw), lh=size*0.42;
+    lines.forEach(line=>{ if(y>pageH-margin){doc.addPage();y=margin;} let x=margin; if(align==='center')x=pageW/2; else if(align==='right')x=pageW-margin; doc.text(line,x,y,{align}); y+=lh; });
+  }
+  const sp=s=>{y+=s; if(y>pageH-margin){doc.addPage();y=margin;}};
+  const today=new Date().toLocaleDateString('de-DE');
+  const fullName=[formData.anrede,formData.titel,formData.vorname,formData.nachname].filter(Boolean).join(' ');
+  const bewAnz=formData.bewerbungenAnzahl==='mehr100'?'mehr als 100':(formData.bewerbungenAnzahl||'10');
+
+  y=30; addText('ANTRAG AUF BILDUNGSGUTSCHEIN',18,true,dark,'center'); sp(3);
+  addText('gemäß §81 SGB III',12,false,gray,'center'); sp(5);
+  addText(`Datum: ${today}`,10,false,gray,'center'); sp(15);
+
+  addText('1. MEINE PERSÖNLICHEN ANGABEN',12,true,gold); sp(3); doc.setDrawColor(...gold); doc.line(margin,y,margin+60,y); sp(8);
+  addText(`Name: ${fullName}`); sp(2);
+  addText(`Geburtsdatum: ${fmt(formData.geburtsdatum)}`); sp(2);
+  addText(`Anschrift: ${formData.strasse||''}, ${formData.plz||''} ${formData.ort||''}`); sp(2);
+  addText(`E-Mail: ${formData.email||''}`); sp(2);
+  addText(`Telefon: ${formData.telefon||''}`);
+  if(formData.kundennummer){sp(2);addText(`Kundennummer: ${formData.kundennummer}`);} sp(12);
+
+  addText('2. MEIN AKTUELLER BESCHÄFTIGUNGSSTATUS',12,true,gold); sp(3); doc.line(margin,y,margin+70,y); sp(8);
+  addText(`Ich bin derzeit: ${L.status[formData.status]||'-'}`); sp(2);
+  addText(`In diesem Status seit: ${fmt(formData.statusSeit)}`); sp(2);
+  addText(`Zuständige Agentur: ${formData.agentur||'-'}`);
+  if(formData.vermittler){sp(2);addText(`Vermittlungsfachkraft: ${formData.vermittler}`);} sp(2);
+  addText(`Leistungsbezug: ${L.leistungen[formData.leistungen]||'-'}`); sp(12);
+
+  addText('3. MEIN BERUFLICHER HINTERGRUND',12,true,gold); sp(3); doc.line(margin,y,margin+60,y); sp(8);
+  addText(`Höchster Bildungsabschluss: ${L.bildung[formData.bildungsabschluss]||'-'}`); sp(2);
+  addText(`Erlernter Beruf: ${formData.erlernterBeruf||'-'}`); sp(2);
+  addText(`Zuletzt ausgeübte Tätigkeit: ${formData.letzteTaetigkeit||'-'}`); sp(2);
+  addText(`Branche: ${L.branche[formData.branche]||'-'}`); sp(2);
+  addText(`Berufserfahrung: ${formData.berufserfahrung||'0'} Jahre`); sp(2);
+  addText(`Grund für die Arbeitssuche: ${L.grund[formData.grundArbeitssuche]||'-'}`); sp(12);
+
+  addText('4. DIE GEWÜNSCHTE WEITERBILDUNG',12,true,gold); sp(3); doc.line(margin,y,margin+60,y); sp(8);
+  const dauer='6 Monate (Vollzeit)';
+  addText('Maßnahmentitel: Arbeit 4.0 - Zukunft der Arbeit',10,true); sp(2);
+  addText(`Maßnahmenummer: ${CONFIG.MASSNAHME_NR}`); sp(2);
+  addText('Bildungsträger: D+J Bildung, Daniela Nedvidek'); sp(2);
+  addText('AZAV-Zertifizierung: Ja (Träger und Maßnahme zertifiziert)'); sp(2);
+  addText(`Dauer: ${dauer} (1.200 UE)`); sp(2);
+  addText('Durchführung: Live-Unterricht mit betreuten Selbstlernphasen'); sp(2);
+  addText(`Angestrebter Zielberuf: ${formData.zielberuf||'-'}`);
+
+  doc.addPage(); y=margin;
+  addText('5. MEINE BISHERIGEN BEWERBUNGSAKTIVITÄTEN',12,true,gold); sp(3); doc.line(margin,y,margin+80,y); sp(8);
+  addText(`Ich habe in den letzten ${formData.bewerbungenMonate||'3'} Monaten ${bewAnz} Bewerbungen geschrieben.`); sp(4);
+  const vl={keine:'keine Vorstellungsgespräche',wenige:'1-3 Vorstellungsgespräche',mehrere:'mehr als 3 Vorstellungsgespräche'};
+  addText(`Ich hatte ${vl[formData.vorstellungen]||'keine Vorstellungsgespräche'}.`);
+  if(formData.ablehnung&&formData.ablehnung.length){sp(4);
+    const al={qualifikation:'fehlende Qualifikationen',digital:'mangelnde digitale Kompetenzen',erfahrung:'fehlende Erfahrung',andere:'andere Kandidaten bevorzugt',keine_rueckmeldung:'keine Rückmeldung'};
+    addText(`Häufigste Ablehnungsgründe: ${formData.ablehnung.map(a=>al[a]).join(', ')}.`);}
+  sp(12);
+
+  addText('6. MEINE BEGRÜNDUNG FÜR DEN WEITERBILDUNGSBEDARF',12,true,gold); sp(3); doc.line(margin,y,margin+80,y); sp(8);
+  let j=`Ich bin derzeit ${(L.status[formData.status]||'arbeitssuchend').toLowerCase()} und verfüge über ${formData.berufserfahrung||'0'} Jahre Berufserfahrung im Bereich ${L.branche[formData.branche]||'meiner Branche'}. `;
+  if(formData.grundArbeitssuche==='kuendigung_ag')j+='Nach der Kündigung durch meinen Arbeitgeber stehe ich vor der Herausforderung, mich in einem zunehmend digitalisierten Arbeitsmarkt neu zu positionieren. ';
+  else if(formData.grundArbeitssuche==='digitalisierung')j+='Meine Arbeitssuche resultiert aus dem Wegfall meiner Tätigkeit durch Digitalisierung - das unterstreicht meinen Bedarf, umfassende digitale Kompetenzen aufzubauen. ';
+  else if(formData.grundArbeitssuche==='restrukturierung')j+='Aufgrund von Restrukturierungen bei meinem vorherigen Arbeitgeber ist eine berufliche Neuorientierung erforderlich. ';
+  else j+='Meine aktuelle Situation erfordert eine strategische Neuausrichtung meiner Qualifikationen. ';
+  if(formData.digitalKompetenz==='gering'||formData.digitalKompetenz==='ausbaufaehig')j+=`Meine digitalen Kompetenzen sind derzeit ${formData.digitalKompetenz==='gering'?'auf Grundkenntnis-Niveau':'ausbaufähig'}, während der Arbeitsmarkt zunehmend umfassende digitale Fähigkeiten voraussetzt. `;
+  j+=`Meine ${bewAnz} Bewerbungen in den letzten ${formData.bewerbungenMonate||'3'} Monaten `;
+  j+=(formData.ablehnung&&(formData.ablehnung.includes('digital')||formData.ablehnung.includes('qualifikation')))?'zeigen deutlich, dass fehlende digitale Kompetenzen ein wesentliches Vermittlungshemmnis darstellen. ':'verdeutlichen die aktuellen Herausforderungen am Arbeitsmarkt. ';
+  j+='Die Weiterbildung "Arbeit 4.0" bietet mir eine ganzheitliche Qualifizierung. Ihr voller Nutzen entfaltet sich erst durch das Zusammenspiel aller 12 Module: Digitalisierung, Künstliche Intelligenz, Social Media Marketing, Business Development, Kommunikation, Mitarbeiterführung, Work-Life-Balance, Digitale Tools, Vertrieb, Nachhaltigkeit, Cybersecurity und Zukunft der Arbeit. ';
+  j+=`Für mein Berufsziel als ${formData.zielberuf||'Fachkraft in der digitalen Arbeitswelt'} ist diese umfassende Qualifizierung unverzichtbar.`;
+  addText(j); sp(10);
+
+  addText('7. RECHTSGRUNDLAGE',12,true,gold); sp(3); doc.line(margin,y,margin+60,y); sp(6);
+  addText('Dieser Antrag erfolgt gemäß §81 SGB III. Die Weiterbildung "Arbeit 4.0" ist nach AZAV zertifiziert. D+J Bildung ist ein anerkannter Bildungsträger gemäß §178 SGB III.',9,false,[60,60,60]);
+
+  doc.addPage(); y=margin;
+  addText('8. MEIN ANTRAG',12,true,gold); sp(3); doc.line(margin,y,margin+60,y); sp(8);
+  addText(`Hiermit beantrage ich, ${fullName}, die Ausstellung eines Bildungsgutscheins für die Maßnahme "Arbeit 4.0" (Nr. ${CONFIG.MASSNAHME_NR}) beim Bildungsträger D+J Bildung.`); sp(4);
+  addText('Ich bestätige, dass alle Angaben wahrheitsgemäß und vollständig sind.'); sp(20);
+  doc.line(margin,y,margin+70,y); sp(5); addText(`${formData.ort||'_____________'}, den ${today}`,10); sp(20);
+  doc.line(margin,y,margin+70,y); sp(5); addText('Meine Unterschrift',9,false,gray); sp(20);
+  addText('Anlage: Info-Anlage zur Weiterbildung "Arbeit 4.0"',9,true,[60,60,60]); sp(4);
+  addText(`D+J Bildung, Daniela Nedvidek, Tel. ${CONFIG.PHONE}, ${CONFIG.DANIELA_EMAIL}, ${CONFIG.HOMEPAGE}`,8,false,gray);
+
+  generatedAntragPDF=doc;
+}
+function downloadAntrag(){ if(!generatedAntragPDF)generateAntragPDF(); generatedAntragPDF.save(`Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf`); }
+
+/* =========================================================
+   PDF 2: INFO-ANLAGE
+   ========================================================= */
+function generateInfoPDF(){
+  const {jsPDF}=window.jspdf; const doc=new jsPDF('p','mm','a4');
+  const pageW=210,pageH=297,margin=25,cw=pageW-2*margin;
+  const gold=[201,169,97],dark=[42,42,42],gray=[100,100,100]; let y=25;
+  function addText(t,size=10,bold=false,color=dark,align='left'){
+    doc.setFontSize(size);doc.setFont('helvetica',bold?'bold':'normal');doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(t,cw),lh=size*0.42;
+    lines.forEach(line=>{if(y>pageH-margin){doc.addPage();y=margin;}let x=margin;if(align==='center')x=pageW/2;doc.text(line,x,y,{align});y+=lh;});
+  }
+  const sp=s=>{y+=s;if(y>pageH-margin){doc.addPage();y=margin;}};
+
+  y=28; addText('D+J BILDUNG',20,true,gold,'center'); sp(2);
+  addText('Weiterbildung: Arbeit 4.0 - Zukunft der Arbeit',13,true,dark,'center'); sp(3);
+  addText(`AZAV-zertifiziert · Maßnahme-Nr. ${CONFIG.MASSNAHME_NR}`,10,false,gray,'center'); sp(14);
+
+  addText('Ihre Vorteile auf einen Blick',14,true,gold); sp(2); doc.setDrawColor(...gold); doc.line(margin,y,margin+50,y); sp(8);
+  ['Höchst relevante, marktgerechte Inhalte','Beste Vermittlungschancen durch praxisnahe Qualifikation','Individuelle Unterstützung im gesamten Bewerbungsprozess','Flexible Online-Durchführung von zu Hause','AZAV-zertifizierte Qualität mit anerkanntem Zertifikat','100 % Förderung über den Bildungsgutschein möglich'].forEach(b=>{addText('- '+b,10);sp(2);}); sp(10);
+
+  addText('So läuft die Weiterbildung ab',14,true,gold); sp(2); doc.line(margin,y,margin+50,y); sp(8);
+  ['Dauer: 6 Monate (Vollzeit)','Umfang: 1.200 Unterrichtseinheiten in 12 Modulen','Durchführung: Live-Unterricht mit betreuten Selbstlernphasen','Dozenten: Expertinnen und Experten aus der Praxis','Abschluss: Anerkanntes Trägerzertifikat'].forEach(a=>{addText('- '+a,10);sp(2);}); sp(10);
+
+  addText('Die 12 Module',14,true,gold); sp(2); doc.line(margin,y,margin+50,y); sp(8);
+  const ml=['Digitalisierung & Transformation','Künstliche Intelligenz','Social Media Marketing','Business Development','Kommunikation & Interaktion','Mitarbeiterführung'];
+  const mr=['Work-Life-Balance & Resilienz','Digitale Tools & agile Methoden','Vertrieb & Kundenbeziehung','Nachhaltigkeit & Verantwortung','Cybersecurity & IT-Sicherheit','Zukunft der Arbeit'];
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(...dark);
+  for(let i=0;i<6;i++){doc.text('- '+ml[i],margin,y);doc.text('- '+mr[i],margin+82,y);y+=5;}
+
+  doc.addPage(); y=25;
+  addText('Ihre Förderung mit dem Bildungsgutschein',14,true,gold); sp(2); doc.line(margin,y,margin+60,y); sp(8);
+  addText('Die Weiterbildung "Arbeit 4.0" ist nach AZAV zertifiziert und kann zu 100 % über einen Bildungsgutschein gefördert werden.',10); sp(8);
+  addText('Voraussetzungen nach §81 SGB III:',11,true,gold); sp(4);
+  ['Sie sind arbeitssuchend oder arbeitslos gemeldet','Sie sind von Arbeitslosigkeit bedroht','Die Weiterbildung ist notwendig für Ihre berufliche Eingliederung','Die Maßnahme ist nach AZAV zertifiziert (erfüllt)'].forEach(v=>{addText('- '+v,10);sp(2);}); sp(12);
+
+  addText('Kontakt und Beratung',14,true,gold); sp(2); doc.line(margin,y,margin+50,y); sp(8);
+  addText('D+J Bildung',12,true,dark); sp(4);
+  addText('Ansprechpartnerin: Daniela Nedvidek',10); sp(2);
+  addText(`Telefon: ${CONFIG.PHONE}`,10); sp(2);
+  addText(`E-Mail: ${CONFIG.DANIELA_EMAIL}`,10); sp(2);
+  addText(`Web: ${CONFIG.HOMEPAGE}`,10); sp(10);
+  addText('Diese Info-Anlage gehört zu Ihrem Antrag auf einen Bildungsgutschein.',9,false,gray,'center');
+
+  generatedInfoPDF=doc;
+}
+function downloadInfoseite(){ if(!generatedInfoPDF)generateInfoPDF(); generatedInfoPDF.save('Info-Anlage_Arbeit_4_0.pdf'); }
+
+</script>
+</body>
+</html>
