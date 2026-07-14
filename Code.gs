@@ -59,6 +59,27 @@ function doPost(e){
     var data = JSON.parse(e.postData.contents);
     var now = new Date();
 
+    if (data.type === 'agentur_mail'){
+      // Antrag mit beiden PDFs DIREKT an die Agentur des Antragstellers senden.
+      // Absender: dieses Google-Konto; Antworten gehen an den/die Antragsteller/in.
+      var to2 = (data.to || '').toString().trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to2)) return json_({ok:false, error:'Ungültige Empfänger-Adresse'});
+      if (!data.files || !data.files.length)       return json_({ok:false, error:'Keine Anhänge übergeben'});
+      var atts2 = data.files.map(function(f){
+        return Utilities.newBlob(Utilities.base64Decode(f.base64), 'application/pdf', f.name);
+      });
+      MailApp.sendEmail({
+        to: to2,
+        replyTo: data.reply_to || '',
+        name: data.applicant_name ? (data.applicant_name + ' – über D+J Bildung') : 'D+J Bildung',
+        subject: data.subject || 'Antrag auf Bildungsgutschein',
+        body: data.body || '',
+        attachments: atts2,
+        bcc: data.notify_to || 'dn@dj-bildung.de'   // D+J sieht, dass wirklich abgeschickt wurde
+      });
+      return json_({ok:true, sent:true});
+    }
+
     if (data.type === 'mailcopy'){
       // Zwei PDFs als Anhang per E-Mail an D+J senden (zum Nachfassen)
       var atts = (data.files || []).map(function(f){
