@@ -5,7 +5,7 @@
 const CONFIG = {
   // Google-Sheet-Webhook: hier die Web-App-URL aus Apps Script eintragen
   // (leer = Tracking/CRM aus, die Seiten und PDFs funktionieren trotzdem)
-  SHEET_WEBHOOK_URL: "",   // z. B. https://script.google.com/macros/s/AKfyc.../exec
+  SHEET_WEBHOOK_URL: "https://script.google.com/macros/s/AKfycbxGkBQpG23sNgf6f5gVtmJjdQgKuB3Qj8SbQsQ5csU4Z99jlldHGifcGO-38DLTYdm6dQ/exec",
   DANIELA_EMAIL:     "dn@dj-bildung.de",
   PHONE:             "+49 7141 461315",
   HOMEPAGE:          "https://www.dj-bildung.com",
