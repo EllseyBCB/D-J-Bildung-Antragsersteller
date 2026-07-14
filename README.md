@@ -33,8 +33,15 @@ https://ellseybcb.github.io/D-J-Bildung-Antragsersteller/
 
 ## E-Mail-Versand an die Agentur
 
-- **Mit eingerichtetem Webhook (empfohlen):** Auf dem Erfolgs-Bildschirm gibt der/die Nutzer/in die E-Mail-Adresse der Agentur ein und klickt „Antrag mit PDFs jetzt absenden". Das Apps Script verschickt die E-Mail **mit beiden PDFs als Anhang** direkt an die Agentur – mit freundlich formuliertem Text, Antwortadresse (`Reply-To`) ist die E-Mail des Antragstellers, D+J erhält eine Blindkopie (BCC).
-- **Ohne Webhook / als Rückfallebene:** Es erscheinen die bisherigen Buttons (E-Mail-Programm, Gmail, Outlook.com, GMX, WEB.DE, Text kopieren). Auf diesem Weg sind automatische Anhänge technisch unmöglich – der E-Mail-Text enthält deshalb dort weiterhin den Hinweis, die zwei heruntergeladenen PDFs selbst anzuhängen.
+Die E-Mail an die Agentur kommt **aus dem eigenen Postfach der arbeitssuchenden Person** (Absender = die Person selbst). Auf dem Erfolgs-Bildschirm:
+
+- Beide PDFs werden automatisch heruntergeladen.
+- Die Person trägt die E-Mail-Adresse der Agentur ein und öffnet ihr E-Mail-Programm oder Webmail (Gmail / Outlook.com / GMX / WEB.DE) – **Empfänger, Betreff und ein freundlich formulierter Text sind schon ausgefüllt**. Sie hängt die zwei PDFs an und sendet.
+- **Am Smartphone** erscheint zusätzlich der Button „Per E-Mail teilen (mit Anhängen)": über die native Teilen-Funktion werden beide PDFs direkt an die Mail-App übergeben – die **Anhänge sind dann automatisch dabei**, Absender bleibt die Person.
+
+> Hinweis: Eine Webseite kann Anhänge technisch **nicht** automatisch in das eigene E-Mail-Fenster legen (Browser-Sicherheit). Deshalb ist am PC das Anhängen der zwei PDFs der einzige manuelle Schritt; am Handy übernimmt das die Teilen-Funktion.
+
+**Automatische Kopie an D+J:** Sobald der Antrag erstellt wird, gehen beide PDFs im Hintergrund per E-Mail an D+J (dn@dj-bildung.de) – unabhängig davon, ob die Person die Mail an ihre Agentur wirklich abschickt. Das benötigt den eingerichteten Webhook (siehe unten).
 
 ## Was noch manuell zu tun ist (Google Sheet / Tracking / Direktversand)
 

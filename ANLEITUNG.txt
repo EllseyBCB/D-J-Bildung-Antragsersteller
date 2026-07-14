@@ -86,21 +86,23 @@ Lade arbeit40.html auf euren Webspace, z. B. als
 ------------------------------------------------------------------------
  E-MAIL-VERSAND AN DIE AGENTUR (für die Nutzer)
 ------------------------------------------------------------------------
-NEU - DIREKTVERSAND MIT ANHÄNGEN (sobald der Webhook eingerichtet ist):
-Auf dem Erfolgs-Bildschirm gibt der/die Nutzer/in die E-Mail-Adresse
-der Agentur ein und klickt "Antrag mit PDFs jetzt absenden". Das
-Apps Script verschickt die E-Mail dann DIREKT an die Agentur -
-inklusive beider PDFs als Anhang und mit freundlich formuliertem Text.
-- Absender: das Google-Konto, mit dem das Skript bereitgestellt wurde
-- Antwortadresse (Reply-To): die E-Mail des Antragstellers
-- D+J erhält automatisch eine Blindkopie (BCC)
-- Voraussetzung: Webhook eingerichtet (Schritte 1-4) UND nach dieser
-  Code-Änderung das Skript NEU BEREITGESTELLT (siehe Hinweis Schritt 3)
+Die E-Mail an die Agentur kommt aus dem EIGENEN POSTFACH der
+arbeitssuchenden Person (Absender = die Person selbst). Auf dem
+Erfolgs-Bildschirm gibt sie die E-Mail-Adresse der Agentur ein; dann
+sind Empfänger, Betreff und ein freundlich formulierter Text schon
+vorbereitet. Sie hängt die zwei PDFs an und sendet.
 
-RÜCKFALLEBENE (ohne Webhook oder wenn der Direktversand fehlschlägt):
-Der/die Nutzer/in kann die E-Mail wie bisher selbst öffnen (Empfänger,
-Betreff und Text sind vorausgefüllt; die 2 PDFs werden manuell
-angehängt - das kann keine E-Mail-Verknüpfung automatisch):
+WICHTIG (technisch bedingt): Eine Webseite kann Anhänge NICHT
+automatisch in das eigene E-Mail-Fenster legen. Am PC ist das Anhängen
+der zwei PDFs deshalb der einzige manuelle Schritt.
+
+AM SMARTPHONE geht es fast automatisch: Dort erscheint zusätzlich der
+Button "Per E-Mail teilen (mit Anhängen)". Über die Teilen-Funktion des
+Handys werden beide PDFs direkt an die Mail-App übergeben - die Anhänge
+sind dann automatisch dabei. Die Person wählt ihre Mail-App, prüft den
+Empfänger und sendet.
+
+Die verschiedenen Wege im Überblick:
 - "E-Mail-Programm öffnen": öffnet das Standard-Mailprogramm (Outlook,
   Apple Mail, Handy-Mail-App ...).
 - Webmail-Buttons Gmail / Outlook.com: öffnen ein fertig ausgefülltes
