@@ -1,0 +1,150 @@
+========================================================================
+ D+J Bildung – Arbeit 4.0 Landingpage
+ Einrichtung: Google Sheet als CRM + Funnel-Tracking
+========================================================================
+
+Du hast 3 Dateien:
+  1. arbeit40.html   – die Landingpage (wird auf www.dj-bildung.com gehostet)
+  2. Code.gs         – das Google-Apps-Script (Webhook zum Sheet)
+  3. ANLEITUNG.txt   – diese Anleitung
+
+
+------------------------------------------------------------------------
+ SCHRITT 1 – Google Sheet anlegen
+------------------------------------------------------------------------
+1. Gehe auf https://sheets.google.com und erstelle eine neue Tabelle.
+2. Nenne sie z. B. "D+J – Arbeit 4.0 Leads".
+   (Die Blätter "Leads", "Events" und "Auswertung" werden automatisch
+    angelegt – du musst nichts vorbereiten.)
+
+
+------------------------------------------------------------------------
+ SCHRITT 2 – Apps Script einfügen
+------------------------------------------------------------------------
+1. In der Tabelle oben:  Erweiterungen  ->  Apps Script.
+2. Lösche den vorhandenen Beispielcode.
+3. Öffne die Datei Code.gs, kopiere den GESAMTEN Inhalt und füge ihn ein.
+4. Oben auf das Disketten-Symbol (Speichern) klicken.
+
+
+------------------------------------------------------------------------
+ SCHRITT 3 – Als Web-App veröffentlichen
+------------------------------------------------------------------------
+1. Oben rechts:  Bereitstellen  ->  Neue Bereitstellung.
+2. Zahnrad "Typ auswählen"  ->  Web-App.
+3. Einstellungen:
+      Beschreibung:   D+J Arbeit 4.0 Webhook
+      Ausführen als:  Ich (dein Google-Konto)
+      Zugriff:        Jeder    <-- WICHTIG (sonst kann die Seite nicht senden)
+4. Bereitstellen klicken. Beim ersten Mal:
+      - Zugriff autorisieren -> dein Konto wählen
+      - "Erweitert" -> "Zu ... (unsicher)" -> Zulassen
+        (das ist normal bei eigenen Skripten)
+      - WICHTIG: Es wird auch die Berechtigung "E-Mail versenden"
+        abgefragt -> zulassen. Die wird für die automatische
+        PDF-Kopie an D+J gebraucht (siehe unten).
+5. Es erscheint eine Web-App-URL, die so aussieht:
+      https://script.google.com/macros/s/AKfyc..../exec
+   -> Diese URL KOPIEREN.
+
+   HINWEIS: Wenn du das Skript später änderst, muss die Änderung neu
+   veröffentlicht werden: Bereitstellen -> Bereitstellungen verwalten
+   -> Stift/Bearbeiten -> Version "Neu" -> Bereitstellen.
+
+
+------------------------------------------------------------------------
+ SCHRITT 4 – URL in die Landingpage eintragen
+------------------------------------------------------------------------
+1. Öffne arbeit40.html in einem Texteditor.
+2. Ganz oben im <script> steht der CONFIG-Block. Trage die URL ein:
+
+      SHEET_WEBHOOK_URL: "https://script.google.com/macros/s/AKfyc..../exec",
+
+3. Speichern. Fertig – ab jetzt landen alle Leads und Funnel-Events
+   automatisch im Sheet, und das Blatt "Auswertung" wird laufend berechnet.
+
+   (Solange die URL leer ist, funktioniert die Seite trotzdem –
+    nur ohne Tracking/CRM.)
+
+
+------------------------------------------------------------------------
+ SCHRITT 5 – Landingpage hochladen
+------------------------------------------------------------------------
+Lade arbeit40.html auf euren Webspace, z. B. als
+      https://www.dj-bildung.com/arbeit40
+(oder als eigene Subdomain / Unterseite).
+
+
+------------------------------------------------------------------------
+ E-MAIL-VERSAND AN DIE AGENTUR (für die Nutzer)
+------------------------------------------------------------------------
+Auf dem Erfolgs-Bildschirm hat der/die Nutzer/in mehrere Wege, die
+fertige E-Mail zu öffnen (Empfänger, Betreff und Text sind vorausgefüllt;
+die 2 PDFs werden manuell angehängt - das kann keine E-Mail-Verknüpfung
+automatisch):
+- "E-Mail-Programm öffnen": öffnet das Standard-Mailprogramm (Outlook,
+  Apple Mail, Handy-Mail-App ...).
+- Webmail-Buttons Gmail / Outlook.com: öffnen ein fertig ausgefülltes
+  Web-Fenster.
+- GMX / WEB.DE: diese unterstützen kein Vorausfüllen -> der Text wird
+  automatisch in die Zwischenablage kopiert und das Postfach geöffnet
+  (im neuen E-Mail-Fenster einfügen).
+- "E-Mail-Text kopieren": Rückfallebene für jedes beliebige Postfach.
+Diese Buttons brauchen KEINE Einrichtung, sie funktionieren sofort.
+
+------------------------------------------------------------------------
+ AUTOMATISCHE PDF-KOPIE AN D+J
+------------------------------------------------------------------------
+Sobald jemand den Antrag erstellt, sendet die Seite die beiden PDFs
+(Antrag + Info-Anlage) automatisch per E-Mail an D+J (dn@dj-bildung.de).
+So habt ihr die vollständigen Unterlagen zum Nachfassen - unabhängig
+davon, ob die Person die Mail an ihre Agentur wirklich abschickt.
+- Absender ist das Google-Konto, mit dem das Apps Script bereitgestellt
+  wurde; Empfänger ist dn@dj-bildung.de (in Code.gs / CONFIG änderbar).
+- Voraussetzung: die Berechtigung "E-Mail versenden" wurde bei der
+  Bereitstellung zugelassen (siehe Schritt 3).
+- Tageslimit von Google: ca. 100 E-Mails/Tag (Gmail) bzw. 1.500
+  (Google Workspace) - für diese Nutzung mehr als ausreichend.
+
+
+Gib jedem YouTuber/Influencer einen eigenen Link mit ?ref=NAME:
+
+   https://www.dj-bildung.com/arbeit40?ref=maxmustermann
+   https://www.dj-bildung.com/arbeit40?ref=annakanal
+
+Im Blatt "Auswertung" siehst du dann pro Creator:
+   Klicks -> Besucher -> Ausgefüllt (Start) -> Antrag erstellt
+          -> Abgeschickt -> Bildungsgutscheine
+und ganz unten die GESAMT-Zeile.
+
+(utm_source / utm_campaign funktionieren ebenfalls, falls ihr die
+ Links über eine Kampagne baut.)
+
+
+------------------------------------------------------------------------
+ NACHFASSEN & GUTSCHEINE ZÄHLEN
+------------------------------------------------------------------------
+- Jeder ausgefüllte Antrag steht komplett im Blatt "Leads" (Name, Kontakt,
+  Agentur usw.) – ideal zum Nachfassen. Nutzt die Spalte "Notiz (intern)".
+- Sobald aus einem Lead wirklich ein Bildungsgutschein entstanden ist:
+  in der Spalte "Status" den Wert von "neu" auf  gutschein  ändern.
+  Das Blatt "Auswertung" zählt ihn dann automatisch als Gutschein
+  (beim nächsten neuen Eintrag; oder im Apps-Script "rebuildDashboard_"
+   bzw. "setup" einmal manuell ausführen).
+
+
+------------------------------------------------------------------------
+ WICHTIGE HINWEISE
+------------------------------------------------------------------------
+- Anhänge: Die "E-Mail an Agentur vorbereiten"-Funktion öffnet das
+  Mailprogramm mit fertigem Text. Die zwei PDFs muss der/die Nutzer/in
+  selbst anhängen (technisch bedingt) – das steht Schritt für Schritt
+  im Erfolgs-Bildschirm.
+- Datenschutz: Es gibt eine Einwilligungs-Checkbox ("D+J darf mich
+  kontaktieren"). Der Wert steht in der Leads-Spalte "Kontakt erlaubt".
+  Impressum und Datenschutz sind im Footer und im Formular verlinkt
+  (https://www.dj-bildung.com/impressum/ und /datenschutz/).
+- Kontaktdaten: Überall D+J Bildung, Daniela Nedvidek,
+  Tel. +49 7141 461315, dn@dj-bildung.de, www.dj-bildung.com.
+- Umfang: Es gibt nur noch die Variante 6 Monate Vollzeit (1.200 UE).
+========================================================================
