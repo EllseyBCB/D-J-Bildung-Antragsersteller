@@ -8,6 +8,14 @@ Du hast 3 Dateien:
   2. Code.gs         – das Google-Apps-Script (Webhook zum Sheet)
   3. ANLEITUNG.txt   – diese Anleitung
 
+AKTUALISIERUNG (GitHub-Pages-Version):
+  Die Seite besteht inzwischen aus zwei Seiten:
+    - index.html  = Landingpage (nur Werbung + Start-Button)
+    - antrag.html = Antragsprozess, Schritt für Schritt
+  Die Webhook-URL aus SCHRITT 4 wird jetzt NICHT mehr in arbeit40.html
+  eingetragen, sondern zentral in  assets/config.js  (eine Stelle für
+  beide Seiten). Alles andere gilt unverändert.
+
 
 ------------------------------------------------------------------------
  SCHRITT 1 – Google Sheet anlegen

@@ -6,8 +6,12 @@ Landingpage für die AZAV-zertifizierte Online-Weiterbildung **Arbeit 4.0** (100
 
 | Datei | Zweck |
 |---|---|
-| `index.html` | Die Landingpage (wird über GitHub Pages veröffentlicht) |
-| `arbeit40.html` | Identische Kopie unter dem Original-Dateinamen (`…/arbeit40.html`) |
+| `index.html` | Die Landingpage (nur Werbung + Button „Antrag in 5 Minuten erstellen") |
+| `antrag.html` | Der Antragsprozess – führt Schritt für Schritt (5 Schritte) durch das Formular, erzeugt die PDFs |
+| `assets/style.css` | Gemeinsames Design für beide Seiten |
+| `assets/config.js` | **Zentrale Konfiguration** (Webhook-URL!) + Funnel-Tracking |
+| `assets/logo.png` | D+J-Logo |
+| `arbeit40.html` | Weiterleitung auf die Landingpage (alte Links funktionieren weiter) |
 | `Code.gs` | Google-Apps-Script (Webhook zum Google Sheet – CRM + Funnel-Auswertung) |
 | `ANLEITUNG.txt` | Vollständige Schritt-für-Schritt-Anleitung |
 | `.github/workflows/deploy-pages.yml` | Automatisches Deployment auf GitHub Pages bei jedem Push |
@@ -34,7 +38,7 @@ Die Seite funktioniert sofort – **ohne** Tracking/CRM. Damit Leads und Funnel-
 1. Google Sheet anlegen (z. B. „D+J – Arbeit 4.0 Leads“).
 2. In der Tabelle: *Erweiterungen → Apps Script* öffnen und den kompletten Inhalt von `Code.gs` einfügen.
 3. *Bereitstellen → Neue Bereitstellung → Web-App* (Ausführen als: Ich, Zugriff: **Jeder**) – die Web-App-URL kopieren.
-4. In `index.html` **und** `arbeit40.html` im `CONFIG`-Block eintragen:
+4. In **`assets/config.js`** (eine einzige Stelle für beide Seiten) eintragen:
    ```js
    SHEET_WEBHOOK_URL: "https://script.google.com/macros/s/AKfyc..../exec",
    ```
