@@ -14,7 +14,10 @@ Landingpage für die AZAV-zertifizierte Online-Weiterbildung **Arbeit 4.0** (100
 
 ## Veröffentlichung (GitHub Pages)
 
-Das Deployment läuft automatisch über GitHub Actions: Bei jedem Push wird der Inhalt des Repositories auf GitHub Pages veröffentlicht. Es ist keine manuelle Einrichtung nötig.
+Das Deployment läuft automatisch über GitHub Actions: Bei jedem Push wird der Inhalt des Repositories auf den Branch `gh-pages` veröffentlicht, den GitHub Pages ausliefert.
+
+**Einmalige Aktivierung (nur beim allerersten Mal nötig):**
+Im Repository auf GitHub: **Settings → Pages → Build and deployment → Source: „Deploy from a branch"** wählen, dann **Branch: `gh-pages`**, Ordner **`/ (root)`**, und **Save** klicken. Nach 1–2 Minuten ist die Seite live.
 
 Die Seite ist danach erreichbar unter:
 
