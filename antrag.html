@@ -209,38 +209,30 @@
         </div>
         <div class="send-box" id="sendBox">
           <h3>Jetzt an deine Agentur senden</h3>
-          <p style="color:#555;margin-bottom:6px">Trage die E-Mail-Adresse deiner Agentur / deines Jobcenters ein.</p>
+          <p style="color:#555;margin-bottom:6px">Die E-Mail geht aus <strong>deinem eigenen Postfach</strong> an deine Agentur / dein Jobcenter. Trage hier die E-Mail-Adresse der Agentur ein – Empfänger und Text sind dann schon vorbereitet.</p>
           <div class="form-group" style="margin:12px 0"><input type="email" id="agenturEmail" placeholder="z. B. muenchen@arbeitsagentur.de"></div>
 
-          <!-- Direktversand: E-Mail inkl. beider PDFs wird automatisch verschickt -->
-          <div id="directSend">
-            <p style="color:#555;margin-bottom:12px">Wir versenden deinen Antrag <strong>zusammen mit beiden PDFs als Anhang</strong> direkt an deine Agentur. Antworten der Agentur gehen an deine E-Mail-Adresse.</p>
-            <button class="btn btn-primary" style="width:100%" onclick="sendDirect()">Antrag mit PDFs jetzt absenden</button>
-            <p style="margin-top:12px;font-size:.88rem;text-align:center"><a href="#" onclick="showFallback();return false" style="color:var(--gold-dark);font-weight:700">Lieber selbst über dein E-Mail-Programm senden?</a></p>
+          <!-- Handy: beide PDFs direkt an die Mail-App übergeben (Anhänge automatisch dabei) -->
+          <div id="shareBox" class="hidden">
+            <div class="info-box"><h4>Am schnellsten am Handy</h4><p>Beide PDFs werden direkt an deine Mail-App übergeben – die Anhänge sind automatisch dabei. Du wählst nur noch deine Mail-App, prüfst den Empfänger und sendest.</p></div>
+            <button class="btn btn-primary" style="width:100%" onclick="shareWithAttachments()">Per E-Mail teilen (mit Anhängen)</button>
+            <p class="webmail-hint" style="text-align:center">oder klassisch per E-Mail-Programm / Webmail:</p>
           </div>
 
-          <!-- Bestätigung nach erfolgreichem Direktversand -->
-          <div id="directSentOk" class="hidden">
-            <div class="info-box success"><h4>&#10003; Antrag abgeschickt!</h4><p id="directSentMsg">Deine E-Mail mit beiden PDFs wurde an deine Agentur gesendet. Eine Kopie ging an D+J Bildung.</p></div>
+          <ol>
+            <li>Beide PDFs sind bereits heruntergeladen (passiert automatisch).</li>
+            <li>E-Mail öffnen – über dein Mailprogramm oder direkt über Webmail. Empfänger und Text sind schon ausgefüllt.</li>
+            <li>Die zwei PDFs anhängen und absenden.</li>
+          </ol>
+          <button class="btn btn-primary" style="width:100%" onclick="sendToAgentur()">E-Mail-Programm öffnen</button>
+          <p class="webmail-hint">Du nutzt Webmail? Direkt öffnen:</p>
+          <div class="provider-row">
+            <button class="prov" onclick="openWebmail('gmail')">Gmail</button>
+            <button class="prov" onclick="openWebmail('outlook')">Outlook.com</button>
+            <button class="prov" onclick="openWebmail('gmx')">GMX</button>
+            <button class="prov" onclick="openWebmail('web')">WEB.DE</button>
           </div>
-
-          <!-- Fallback: E-Mail selbst senden (Anhänge müssen hier manuell angehängt werden) -->
-          <div id="fallbackSend" class="hidden">
-            <ol>
-              <li>Beide PDFs oben herunterladen (passiert automatisch).</li>
-              <li>E-Mail öffnen – über dein Mailprogramm oder direkt über Webmail. Empfänger und Text sind schon ausgefüllt.</li>
-              <li>Die zwei PDFs anhängen und absenden.</li>
-            </ol>
-            <button class="btn btn-primary" style="width:100%" onclick="sendToAgentur()">E-Mail-Programm öffnen</button>
-            <p class="webmail-hint">Du nutzt Webmail? Direkt öffnen:</p>
-            <div class="provider-row">
-              <button class="prov" onclick="openWebmail('gmail')">Gmail</button>
-              <button class="prov" onclick="openWebmail('outlook')">Outlook.com</button>
-              <button class="prov" onclick="openWebmail('gmx')">GMX</button>
-              <button class="prov" onclick="openWebmail('web')">WEB.DE</button>
-            </div>
-            <button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="copyMailText()">E-Mail-Text kopieren</button>
-          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="copyMailText()">E-Mail-Text kopieren</button>
         </div>
         <p style="margin-top:22px;color:var(--gray);font-size:.92rem">Fragen? D+J Bildung hilft dir gern weiter: <a href="mailto:dn@dj-bildung.de" style="color:var(--gold-dark);font-weight:700">dn@dj-bildung.de</a> · <a href="tel:+497141461315" style="color:var(--gold-dark);font-weight:700">+49 7141 461315</a></p>
       </div>
@@ -419,8 +411,8 @@ async function finish(){
   document.getElementById('loadingOverlay').classList.add('hidden');
   // Agentur-E-Mail für den Versand-Schritt vorbelegen
   if(formData.agentur) document.getElementById('agenturEmail').placeholder=`E-Mail deiner ${formData.agentur}`;
-  // Ohne eingerichteten Webhook ist kein Direktversand möglich -> E-Mail-Buttons zeigen
-  if(!sheetOn()) showFallback();
+  // Handy-Teilen-Button nur zeigen, wenn das Gerät das Teilen von Dateien unterstützt
+  maybeShowShare();
   window.scrollTo({top:0,behavior:'smooth'});
   // beide PDFs automatisch anbieten
   downloadAntrag(); setTimeout(downloadInfoseite,600);
@@ -484,50 +476,30 @@ ${formData.strasse||''}, ${formData.plz||''} ${formData.ort||''}`;
   return {to, name, subject, body};
 }
 
-/* --- Direktversand: E-Mail inkl. beider PDFs über das Apps Script senden --- */
-function showFallback(){
-  document.getElementById('directSend').classList.add('hidden');
-  document.getElementById('fallbackSend').classList.remove('hidden');
+/* --- Handy: beide PDFs per Teilen-Funktion direkt an die Mail-App übergeben --- */
+// Erzeugt File-Objekte der beiden PDFs (für navigator.share)
+function pdfFiles(){
+  if(!generatedAntragPDF) generateAntragPDF();
+  if(!generatedInfoPDF)   generateInfoPDF();
+  return [
+    new File([generatedAntragPDF.output('blob')], `Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf`, {type:'application/pdf'}),
+    new File([generatedInfoPDF.output('blob')], 'Info-Anlage_Arbeit_4_0.pdf', {type:'application/pdf'})
+  ];
 }
-async function sendDirect(){
-  const m=buildMail(true);
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.to)){
-    toast('Bitte gib zuerst die E-Mail-Adresse deiner Agentur / deines Jobcenters ein.');
-    document.getElementById('agenturEmail').focus();
-    return;
-  }
-  document.getElementById('loadingOverlay').classList.remove('hidden');
+// Zeigt den Teilen-Button nur, wenn das Gerät das Teilen von Dateien unterstützt (i. d. R. Smartphones)
+function maybeShowShare(){
   try{
-    if(!generatedAntragPDF) generateAntragPDF();
-    if(!generatedInfoPDF)   generateInfoPDF();
-    const a=generatedAntragPDF.output('datauristring').split('base64,')[1];
-    const i=generatedInfoPDF.output('datauristring').split('base64,')[1];
-    const res=await fetch(CONFIG.SHEET_WEBHOOK_URL,{
-      method:'POST',
-      body: JSON.stringify({
-        type:'agentur_mail',
-        to:m.to, reply_to:formData.email||'', applicant_name:m.name,
-        subject:m.subject, body:m.body,
-        creator:CREATOR, visitor_id:VISITOR,
-        files:[
-          {name:`Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf`, base64:a},
-          {name:'Info-Anlage_Arbeit_4_0.pdf', base64:i}
-        ]
-      })
-    });
-    const out=await res.json();
-    if(!out || !out.ok) throw new Error(out && out.error || 'Versand fehlgeschlagen');
-    track('submitted',{agentur:formData.agentur||null, has_email:true, via:'direct'});
-    document.getElementById('directSentMsg').textContent=`Deine E-Mail mit beiden PDFs wurde an ${m.to} gesendet. Antworten der Agentur gehen direkt an ${formData.email||'deine E-Mail-Adresse'}.`;
-    document.getElementById('directSend').classList.add('hidden');
-    document.getElementById('directSentOk').classList.remove('hidden');
-    document.getElementById('agenturEmail').disabled=true;
-  }catch(e){
-    toast('Der automatische Versand hat leider nicht geklappt. Bitte nutze die E-Mail-Buttons unten – dort hängst du die 2 PDFs selbst an.');
-    showFallback();
-  }finally{
-    document.getElementById('loadingOverlay').classList.add('hidden');
-  }
+    if(navigator.canShare && navigator.canShare({files:pdfFiles()})){
+      document.getElementById('shareBox').classList.remove('hidden');
+    }
+  }catch(e){/* nicht unterstützt -> Button bleibt versteckt */}
+}
+async function shareWithAttachments(){
+  const m=buildMail(true); // Anhänge sind dabei -> freundlicher Anlagen-Text
+  try{
+    await navigator.share({files:pdfFiles(), title:m.subject, text:(m.to?`An: ${m.to}\n\n`:'')+m.body});
+    track('submitted',{agentur:formData.agentur||null, has_email:!!m.to, via:'share'});
+  }catch(e){/* Nutzer hat abgebrochen o. Ä. -> nichts tun */}
 }
 
 // 1) Standard-Mailprogramm (mailto)
