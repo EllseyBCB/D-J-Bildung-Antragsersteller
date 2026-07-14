@@ -31,9 +31,14 @@ https://ellseybcb.github.io/D-J-Bildung-Antragsersteller/
 
 (sowohl direkt als auch unter `…/arbeit40.html`)
 
-## Was noch manuell zu tun ist (Google Sheet / Tracking)
+## E-Mail-Versand an die Agentur
 
-Die Seite funktioniert sofort – **ohne** Tracking/CRM. Damit Leads und Funnel-Events im Google Sheet landen und die automatische PDF-Kopie an D+J (dn@dj-bildung.de) gesendet wird, müssen die Schritte 1–4 aus `ANLEITUNG.txt` einmalig ausgeführt werden:
+- **Mit eingerichtetem Webhook (empfohlen):** Auf dem Erfolgs-Bildschirm gibt der/die Nutzer/in die E-Mail-Adresse der Agentur ein und klickt „Antrag mit PDFs jetzt absenden". Das Apps Script verschickt die E-Mail **mit beiden PDFs als Anhang** direkt an die Agentur – mit freundlich formuliertem Text, Antwortadresse (`Reply-To`) ist die E-Mail des Antragstellers, D+J erhält eine Blindkopie (BCC).
+- **Ohne Webhook / als Rückfallebene:** Es erscheinen die bisherigen Buttons (E-Mail-Programm, Gmail, Outlook.com, GMX, WEB.DE, Text kopieren). Auf diesem Weg sind automatische Anhänge technisch unmöglich – der E-Mail-Text enthält deshalb dort weiterhin den Hinweis, die zwei heruntergeladenen PDFs selbst anzuhängen.
+
+## Was noch manuell zu tun ist (Google Sheet / Tracking / Direktversand)
+
+Die Seite funktioniert sofort – **ohne** Tracking/CRM und ohne Direktversand. Damit Leads und Funnel-Events im Google Sheet landen, die automatische PDF-Kopie an D+J (dn@dj-bildung.de) gesendet wird und der **Direktversand an die Agentur mit PDF-Anhängen** funktioniert, müssen die Schritte 1–4 aus `ANLEITUNG.txt` einmalig ausgeführt werden:
 
 1. Google Sheet anlegen (z. B. „D+J – Arbeit 4.0 Leads“).
 2. In der Tabelle: *Erweiterungen → Apps Script* öffnen und den kompletten Inhalt von `Code.gs` einfügen.
@@ -43,6 +48,8 @@ Die Seite funktioniert sofort – **ohne** Tracking/CRM. Damit Leads und Funnel-
    SHEET_WEBHOOK_URL: "https://script.google.com/macros/s/AKfyc..../exec",
    ```
    Änderung committen/pushen – das Deployment läuft automatisch.
+
+**Wichtig bei Änderungen an `Code.gs`:** Das Skript im Apps-Script-Editor aktualisieren und **neu bereitstellen** (Bereitstellen → Bereitstellungen verwalten → Bearbeiten → Version „Neu" → Bereitstellen), sonst läuft im Web weiterhin die alte Version.
 
 ## Creator-Links
 

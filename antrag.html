@@ -207,24 +207,40 @@
           <button class="download-btn" onclick="downloadAntrag()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Antrag auf Bildungsgutschein (PDF)</button>
           <button class="download-btn outline" onclick="downloadInfoseite()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Info-Anlage „Arbeit 4.0" (PDF)</button>
         </div>
-        <div class="send-box">
+        <div class="send-box" id="sendBox">
           <h3>Jetzt an deine Agentur senden</h3>
-          <p style="color:#555;margin-bottom:6px">Trage die E-Mail-Adresse deiner Agentur / deines Jobcenters ein – wir bereiten die Nachricht für dich vor.</p>
+          <p style="color:#555;margin-bottom:6px">Trage die E-Mail-Adresse deiner Agentur / deines Jobcenters ein.</p>
           <div class="form-group" style="margin:12px 0"><input type="email" id="agenturEmail" placeholder="z. B. muenchen@arbeitsagentur.de"></div>
-          <ol>
-            <li>Beide PDFs oben herunterladen (passiert automatisch).</li>
-            <li>E-Mail öffnen – über dein Mailprogramm oder direkt über Webmail. Empfänger und Text sind schon ausgefüllt.</li>
-            <li>Die zwei PDFs anhängen und absenden.</li>
-          </ol>
-          <button class="btn btn-primary" style="width:100%" onclick="sendToAgentur()">E-Mail-Programm öffnen</button>
-          <p class="webmail-hint">Du nutzt Webmail? Direkt öffnen:</p>
-          <div class="provider-row">
-            <button class="prov" onclick="openWebmail('gmail')">Gmail</button>
-            <button class="prov" onclick="openWebmail('outlook')">Outlook.com</button>
-            <button class="prov" onclick="openWebmail('gmx')">GMX</button>
-            <button class="prov" onclick="openWebmail('web')">WEB.DE</button>
+
+          <!-- Direktversand: E-Mail inkl. beider PDFs wird automatisch verschickt -->
+          <div id="directSend">
+            <p style="color:#555;margin-bottom:12px">Wir versenden deinen Antrag <strong>zusammen mit beiden PDFs als Anhang</strong> direkt an deine Agentur. Antworten der Agentur gehen an deine E-Mail-Adresse.</p>
+            <button class="btn btn-primary" style="width:100%" onclick="sendDirect()">Antrag mit PDFs jetzt absenden</button>
+            <p style="margin-top:12px;font-size:.88rem;text-align:center"><a href="#" onclick="showFallback();return false" style="color:var(--gold-dark);font-weight:700">Lieber selbst über dein E-Mail-Programm senden?</a></p>
           </div>
-          <button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="copyMailText()">E-Mail-Text kopieren</button>
+
+          <!-- Bestätigung nach erfolgreichem Direktversand -->
+          <div id="directSentOk" class="hidden">
+            <div class="info-box success"><h4>&#10003; Antrag abgeschickt!</h4><p id="directSentMsg">Deine E-Mail mit beiden PDFs wurde an deine Agentur gesendet. Eine Kopie ging an D+J Bildung.</p></div>
+          </div>
+
+          <!-- Fallback: E-Mail selbst senden (Anhänge müssen hier manuell angehängt werden) -->
+          <div id="fallbackSend" class="hidden">
+            <ol>
+              <li>Beide PDFs oben herunterladen (passiert automatisch).</li>
+              <li>E-Mail öffnen – über dein Mailprogramm oder direkt über Webmail. Empfänger und Text sind schon ausgefüllt.</li>
+              <li>Die zwei PDFs anhängen und absenden.</li>
+            </ol>
+            <button class="btn btn-primary" style="width:100%" onclick="sendToAgentur()">E-Mail-Programm öffnen</button>
+            <p class="webmail-hint">Du nutzt Webmail? Direkt öffnen:</p>
+            <div class="provider-row">
+              <button class="prov" onclick="openWebmail('gmail')">Gmail</button>
+              <button class="prov" onclick="openWebmail('outlook')">Outlook.com</button>
+              <button class="prov" onclick="openWebmail('gmx')">GMX</button>
+              <button class="prov" onclick="openWebmail('web')">WEB.DE</button>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="copyMailText()">E-Mail-Text kopieren</button>
+          </div>
         </div>
         <p style="margin-top:22px;color:var(--gray);font-size:.92rem">Fragen? D+J Bildung hilft dir gern weiter: <a href="mailto:dn@dj-bildung.de" style="color:var(--gold-dark);font-weight:700">dn@dj-bildung.de</a> · <a href="tel:+497141461315" style="color:var(--gold-dark);font-weight:700">+49 7141 461315</a></p>
       </div>
@@ -403,6 +419,8 @@ async function finish(){
   document.getElementById('loadingOverlay').classList.add('hidden');
   // Agentur-E-Mail für den Versand-Schritt vorbelegen
   if(formData.agentur) document.getElementById('agenturEmail').placeholder=`E-Mail deiner ${formData.agentur}`;
+  // Ohne eingerichteten Webhook ist kein Direktversand möglich -> E-Mail-Buttons zeigen
+  if(!sheetOn()) showFallback();
   window.scrollTo({top:0,behavior:'smooth'});
   // beide PDFs automatisch anbieten
   downloadAntrag(); setTimeout(downloadInfoseite,600);
@@ -429,26 +447,87 @@ async function saveLead(){
   await postToSheet('lead', payload);
 }
 
-function buildMail(){
+function buildMail(direct){
   const to=(document.getElementById('agenturEmail').value||'').trim();
   const name=[formData.vorname,formData.nachname].filter(Boolean).join(' ');
   const subject=`Antrag auf Bildungsgutschein – ${name} – Maßnahme ${CONFIG.MASSNAHME_NR}`;
-  const body=
+
+  const gruss=
 `Sehr geehrte Damen und Herren,
 
-anbei sende ich Ihnen meinen Antrag auf einen Bildungsgutschein für die AZAV-zertifizierte Weiterbildung "Arbeit 4.0 - Zukunft der Arbeit" (Maßnahme-Nr. ${CONFIG.MASSNAHME_NR}, Bildungsträger D+J Bildung).
+hiermit reiche ich meinen Antrag auf einen Bildungsgutschein für die AZAV-zertifizierte Weiterbildung "Arbeit 4.0 - Zukunft der Arbeit" (Maßnahme-Nr. ${CONFIG.MASSNAHME_NR}, Bildungsträger D+J Bildung) ein.`;
 
-WICHTIG: Bitte hängen Sie vor dem Senden die zwei heruntergeladenen PDF-Dateien an diese E-Mail an:
+  // Direktversand: PDFs hängen automatisch an – freundlicher Hinweis auf die Anlagen.
+  // Fallback (eigenes Mailprogramm): Anhänge sind technisch nicht automatisch möglich,
+  // deshalb bleibt dort der Hinweis, die zwei PDFs selbst anzuhängen.
+  const anlagen = direct
+? `Im Anhang dieser E-Mail finden Sie die vollständigen Unterlagen:
+1. meinen Antrag auf einen Bildungsgutschein
+2. die Info-Anlage zur Weiterbildung "Arbeit 4.0"`
+: `WICHTIG: Bitte hängen Sie vor dem Senden die zwei heruntergeladenen PDF-Dateien an diese E-Mail an:
 1. Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf
-2. Info-Anlage_Arbeit_4_0.pdf
+2. Info-Anlage_Arbeit_4_0.pdf`;
 
-Für Rückfragen zur Maßnahme steht Ihnen der Bildungsträger zur Verfügung:
+  const body=
+`${gruss}
+
+${anlagen}
+
+Über eine Rückmeldung zu meinem Antrag oder einen Termin zur persönlichen Beratung freue ich mich sehr. Sie erreichen mich per E-Mail (${formData.email||''})${formData.telefon?` oder telefonisch (${formData.telefon})`:''}.
+
+Für Rückfragen zur Maßnahme steht Ihnen der Bildungsträger gern zur Verfügung:
 D+J Bildung, Daniela Nedvidek, ${CONFIG.PHONE}, ${CONFIG.DANIELA_EMAIL}, ${CONFIG.HOMEPAGE}
 
 Mit freundlichen Grüßen
 ${name}
 ${formData.strasse||''}, ${formData.plz||''} ${formData.ort||''}`;
   return {to, name, subject, body};
+}
+
+/* --- Direktversand: E-Mail inkl. beider PDFs über das Apps Script senden --- */
+function showFallback(){
+  document.getElementById('directSend').classList.add('hidden');
+  document.getElementById('fallbackSend').classList.remove('hidden');
+}
+async function sendDirect(){
+  const m=buildMail(true);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.to)){
+    toast('Bitte gib zuerst die E-Mail-Adresse deiner Agentur / deines Jobcenters ein.');
+    document.getElementById('agenturEmail').focus();
+    return;
+  }
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+  try{
+    if(!generatedAntragPDF) generateAntragPDF();
+    if(!generatedInfoPDF)   generateInfoPDF();
+    const a=generatedAntragPDF.output('datauristring').split('base64,')[1];
+    const i=generatedInfoPDF.output('datauristring').split('base64,')[1];
+    const res=await fetch(CONFIG.SHEET_WEBHOOK_URL,{
+      method:'POST',
+      body: JSON.stringify({
+        type:'agentur_mail',
+        to:m.to, reply_to:formData.email||'', applicant_name:m.name,
+        subject:m.subject, body:m.body,
+        creator:CREATOR, visitor_id:VISITOR,
+        files:[
+          {name:`Bildungsgutschein_Antrag_${formData.nachname||'Antrag'}.pdf`, base64:a},
+          {name:'Info-Anlage_Arbeit_4_0.pdf', base64:i}
+        ]
+      })
+    });
+    const out=await res.json();
+    if(!out || !out.ok) throw new Error(out && out.error || 'Versand fehlgeschlagen');
+    track('submitted',{agentur:formData.agentur||null, has_email:true, via:'direct'});
+    document.getElementById('directSentMsg').textContent=`Deine E-Mail mit beiden PDFs wurde an ${m.to} gesendet. Antworten der Agentur gehen direkt an ${formData.email||'deine E-Mail-Adresse'}.`;
+    document.getElementById('directSend').classList.add('hidden');
+    document.getElementById('directSentOk').classList.remove('hidden');
+    document.getElementById('agenturEmail').disabled=true;
+  }catch(e){
+    toast('Der automatische Versand hat leider nicht geklappt. Bitte nutze die E-Mail-Buttons unten – dort hängst du die 2 PDFs selbst an.');
+    showFallback();
+  }finally{
+    document.getElementById('loadingOverlay').classList.add('hidden');
+  }
 }
 
 // 1) Standard-Mailprogramm (mailto)

@@ -86,10 +86,21 @@ Lade arbeit40.html auf euren Webspace, z. B. als
 ------------------------------------------------------------------------
  E-MAIL-VERSAND AN DIE AGENTUR (für die Nutzer)
 ------------------------------------------------------------------------
-Auf dem Erfolgs-Bildschirm hat der/die Nutzer/in mehrere Wege, die
-fertige E-Mail zu öffnen (Empfänger, Betreff und Text sind vorausgefüllt;
-die 2 PDFs werden manuell angehängt - das kann keine E-Mail-Verknüpfung
-automatisch):
+NEU - DIREKTVERSAND MIT ANHÄNGEN (sobald der Webhook eingerichtet ist):
+Auf dem Erfolgs-Bildschirm gibt der/die Nutzer/in die E-Mail-Adresse
+der Agentur ein und klickt "Antrag mit PDFs jetzt absenden". Das
+Apps Script verschickt die E-Mail dann DIREKT an die Agentur -
+inklusive beider PDFs als Anhang und mit freundlich formuliertem Text.
+- Absender: das Google-Konto, mit dem das Skript bereitgestellt wurde
+- Antwortadresse (Reply-To): die E-Mail des Antragstellers
+- D+J erhält automatisch eine Blindkopie (BCC)
+- Voraussetzung: Webhook eingerichtet (Schritte 1-4) UND nach dieser
+  Code-Änderung das Skript NEU BEREITGESTELLT (siehe Hinweis Schritt 3)
+
+RÜCKFALLEBENE (ohne Webhook oder wenn der Direktversand fehlschlägt):
+Der/die Nutzer/in kann die E-Mail wie bisher selbst öffnen (Empfänger,
+Betreff und Text sind vorausgefüllt; die 2 PDFs werden manuell
+angehängt - das kann keine E-Mail-Verknüpfung automatisch):
 - "E-Mail-Programm öffnen": öffnet das Standard-Mailprogramm (Outlook,
   Apple Mail, Handy-Mail-App ...).
 - Webmail-Buttons Gmail / Outlook.com: öffnen ein fertig ausgefülltes
